@@ -1,0 +1,42 @@
+{
+    "Filename": "Useful",
+    "Description List": [
+        "best bg remover",
+        "open romanian",
+        "google search",
+        "to-pdf (ilovepdf)"
+    ],
+    "Data": [
+        {
+            "Description": "best bg remover",
+            "Incognito": "No",
+            "Links": [
+                "https://www.photoroom.com/tools/background-remover"
+            ]
+        },
+        {
+            "Description": "open romanian",
+            "Incognito": "Yes",
+            "Links": [
+                "https://dexonline.ro/",
+                "https://www.dictionardesinonime.ro/",
+                "https://context.reverso.net/traducere/engleza-romana/try",
+                "https://www.google.com/search?q=define+try&oq=define+try"
+            ]
+        },
+        {
+            "Description": "google search",
+            "Incognito": "No",
+            "Links": [
+                "https://www.google.com/search?q=\\{Search\\}"
+            ]
+        },
+        {
+            "Description": "to-pdf (ilovepdf)",
+            "Incognito": "No",
+            "Links": [
+                "https://www.ilovepdf.com/\\{word, powerpoint, excel, or jpg\\}_to_pdf"
+            ]
+        }
+    ]
+}

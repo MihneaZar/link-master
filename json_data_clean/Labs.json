@@ -1,0 +1,27 @@
+{
+    "Filename": "Labs",
+    "Description List": [
+        "CC (L)",
+        "IDP Proiect"
+    ],
+    "Data": [
+        {
+            "Description": "CC (L)",
+            "Incognito": "No",
+            "Links": [
+                "https://cybercloud.upb.ro/docs/cloud-computing/",
+                "https://cloud.grid.pub.ro/"
+            ]
+        },
+        {
+            "Description": "IDP Proiect",
+            "Incognito": "No",
+            "Links": [
+                "https://gitlab.com/mobylab-idp",
+                "https://github.com/alexandraion22/idp-lab",
+                "https://gitlab.com/demo-idp",
+                "https://mobylab.docs.crescdi.pub.ro/docs/softwareDevelopment/introduction"
+            ]
+        }
+    ]
+}
