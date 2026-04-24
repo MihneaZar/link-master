@@ -1,0 +1,42 @@
+{
+    "Filename": "Dicts",
+    "Description List": [
+        "thesaurus",
+        "merriam-webster",
+        "wordhippo",
+        "all dicts"
+    ],
+    "Data": [
+        {
+            "Description": "thesaurus",
+            "Incognito": "No",
+            "Links": [
+                "https://www.thesaurus.com/browse/\\{Word or expression (will redirect if it's not found)\\}"
+            ]
+        },
+        {
+            "Description": "merriam-webster",
+            "Incognito": "No",
+            "Links": [
+                "https://www.merriam-webster.com/thesaurus/\\{Word or expression\\}"
+            ]
+        },
+        {
+            "Description": "wordhippo",
+            "Incognito": "No",
+            "Links": [
+                "https://www.wordhippo.com/what-is/another-word-for/\\{Word or expression\\}.html"
+            ]
+        },
+        {
+            "Description": "all dicts",
+            "Incognito": "No",
+            "Links": [
+                "https://www.thesaurus.com/browse/\\{search_str\\}",
+                "https://www.merriam-webster.com/thesaurus/\\{search_str\\}",
+                "https://www.wordhippo.com/what-is/another-word-for/\\{search_str\\}.html",
+                "var search_str = \\{Word or expression\\}"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+{
+    "Filename": "Basic",
+    "Description List": [
+        "studenti upb",
+        "Email UPB",
+        "Moodle UPB"
+    ],
+    "Data": [
+        {
+            "Description": "studenti upb",
+            "Incognito": "No",
+            "Links": [
+                "https://studenti.pub.ro/index.php?page=Informatii&ActiveViewID=tab_infogen"
+            ]
+        },
+        {
+            "Description": "Email UPB",
+            "Incognito": "No",
+            "Links": [
+                "https://outlook.office.com/mail/inbox"
+            ]
+        },
+        {
+            "Description": "Moodle UPB",
+            "Incognito": "Yes",
+            "Links": [
+                "https://curs.upb.ro/2025/my/"
+            ]
+        }
+    ]
+}
