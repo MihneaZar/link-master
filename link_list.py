@@ -1,8 +1,7 @@
 import sys
 sys.path.append('C:\\Users\\Mihnea\\Desktop\\Random thoughts\\Cool stuff\\ConsoleListInterface')
 
-from console_list_interface import ConsoleInterface, waitForEnter # pyright: ignore[reportMissingImports]
-from validator_collection import checkers
+from ConsoleListInterface import ConsoleListInterface, waitForEnter # pyright: ignore[reportMissingImports]
 from keep import KEEP_FILE, KEEP_TOKEN
 from readchar import readkey, key
 from send2trash import send2trash
@@ -262,6 +261,7 @@ def parse_link(link, vars):
                 value = vars[link[pos:link.find(LINK_INPUT_END)]]
             else:
                 value = input(f'{link[pos:link.find(LINK_INPUT_END)]}: ')
+
             if value.isspace():
                 return None
 
@@ -822,7 +822,7 @@ def main():
 
     else:
         saved_pos = 0
-        console = ConsoleInterface()
+        console = ConsoleListInterface()
         console.hideFiles = True  # hidden files
         console.upload    = False # determines whether the app will automatically start gkeep_upload on quit (Esc) 
         while (True):
