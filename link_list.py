@@ -3,6 +3,7 @@ sys.path.append('C:\\Users\\Mihnea\\Desktop\\Random thoughts\\Cool stuff\\Consol
 
 from console_list_interface import ConsoleInterface, waitForEnter # pyright: ignore[reportMissingImports]
 from validator_collection import checkers
+from keep import KEEP_FILE, KEEP_TOKEN
 from readchar import readkey, key
 from send2trash import send2trash
 from blessed import Terminal
