@@ -25,11 +25,6 @@ if ".paths" not in os.listdir(HOMEPATH):
 sys.path.append(open(f'{HOMEPATH}/.paths').read())
 
 
-if not os.path.exists(f'{HOMEPATH}/keep.py'):
-    print("Please rename 'keep_clean.py' to 'keep.py'.")
-    quit()
-
-
 from ConsoleListInterface import ConsoleListInterface, waitForEnter # pyright: ignore[reportMissingImports]
 from keep import KEEP_FILE, KEEP_TOKEN
 from readchar import readkey, key
