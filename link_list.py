@@ -1,5 +1,29 @@
 import sys
-sys.path.append('C:\\Users\\Mihnea\\Desktop\\Random thoughts\\Cool stuff\\ConsoleListInterface')
+import os
+
+HOMEPATH = os.path.dirname(os.path.realpath(__file__))
+
+if ".paths" not in os.listdir(HOMEPATH):
+    console_path = input("Please type path to directory of ConsoleListInterface.py (or leave empty to cancel):\n")
+    if console_path[0] == '"':
+        console_path = console_path[1:]
+    if console_path[-1] == '"':
+        console_path = console_path[:-1]
+    
+    while console_path and not console_path.isspace() and not os.path.exists(f'{console_path}/ConsoleListInterface.py'):
+        console_path = input("\nConsoleListInterface.py not found, please download and type path to directory:\n") 
+        if console_path[0] == '"':
+            console_path = console_path[1:]
+        if console_path[-1] == '"':
+            console_path = console_path[:-1]
+    
+    if not console_path or console_path.isspace():
+        quit()
+
+    open(f'{HOMEPATH}/.paths', 'w').write(console_path)
+
+sys.path.append(open(f'{HOMEPATH}/.paths').read())
+
 
 from ConsoleListInterface import ConsoleListInterface, waitForEnter # pyright: ignore[reportMissingImports]
 from keep import KEEP_FILE, KEEP_TOKEN
@@ -10,14 +34,12 @@ from functools import reduce
 import subprocess
 import requests
 import json
-import os
 
 term = Terminal()
 
-home_folder = "C:/Users/Mihnea/Desktop/Random thoughts/Cool stuff/Link List/"
-json_folder = f'{home_folder}json_data/'
+JSONFOLDER = f'{HOMEPATH}/json_data/'
 
-sys.stderr = open(f'{home_folder}errors.txt', "a")
+sys.stderr = open(f'{HOMEPATH}/errors.txt', "a")
 
 # for custom input in the link, such as show season and episode
 LINK_INPUT_START = '\\{'
@@ -93,8 +115,8 @@ def gkeep_upload(press_enter=True):
     # warning note for the 'Link Master' label, since all notes in label get deleted on upload
     note = keep.createNote("DO NOT ADD THIS LABEL", "All notes with this label are deleted on upload from Link Master app.")
     note.labels.add(label)
-    for json_file in os.listdir(json_folder):
-        link_data = json.load(open(f'{json_folder}{json_file}'))
+    for json_file in os.listdir(JSONFOLDER):
+        link_data = json.load(open(f'{JSONFOLDER}{json_file}'))
 
         # checking if link list has data
         if link_data[DATA]:
@@ -647,7 +669,7 @@ Controls:
 
 # returns selected json file
 def json_file_loop(console, saved_pos=0):
-    files = sorted([file[:file.rfind('.')] for file in os.listdir(json_folder) if 'zip' not in file])
+    files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
     files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
     console.updateList(files)
@@ -660,7 +682,7 @@ def json_file_loop(console, saved_pos=0):
 
         # open selected link list
         if command == key.ENTER:
-            return f'{json_folder}{files[curr_pos]}.json', curr_pos
+            return f'{JSONFOLDER}{files[curr_pos]}.json', curr_pos
 
 
         # creating new link list
@@ -677,18 +699,18 @@ def json_file_loop(console, saved_pos=0):
                     continue
 
                 # ignoring command if file already exists
-                if os.path.exists(f'{json_folder}{filename}.json'):
+                if os.path.exists(f'{JSONFOLDER}{filename}.json'):
                     console.separateInteraction(message="Link list with this name already exists.\n")
                     continue
 
-                with open(f'{json_folder}{filename}.json', 'w', encoding='utf-8') as file:
+                with open(f'{JSONFOLDER}{filename}.json', 'w', encoding='utf-8') as file:
                     json.dump({FILENAME: filename, DESCRIPTIONS: [], DATA: []}, file, ensure_ascii=False, indent=4)
 
                 # if a hidden file was created, automatically show hidden files
                 if filename[0] == '.':
                     console.hideFiles = False
                     
-                files = sorted([file[:file.rfind('.')] for file in os.listdir(json_folder) if 'zip' not in file])
+                files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
                 files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
                 console.updateList(files)
@@ -715,13 +737,13 @@ def json_file_loop(console, saved_pos=0):
                     continue
 
                 # ignoring command if file already exists
-                if os.path.exists(f'{json_folder}{filename}.json'):
+                if os.path.exists(f'{JSONFOLDER}{filename}.json'):
                     console.separateInteraction(message="Link list with this name already exists.\n")
                     continue
                 
-                os.rename(f'{json_folder}{file}.json', f'{json_folder}{filename}.json')
+                os.rename(f'{JSONFOLDER}{file}.json', f'{JSONFOLDER}{filename}.json')
 
-                files = sorted([file[:file.rfind('.')] for file in os.listdir(json_folder) if 'zip' not in file])
+                files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
                 files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
                     
                 console.updateList(files)
@@ -737,7 +759,7 @@ def json_file_loop(console, saved_pos=0):
         if command == key.DELETE:
             try:
                 file = files[curr_pos]
-                send2trash(f'{json_folder}{file}.json'.replace('/', '\\')) # this function requires backslashes
+                send2trash(f'{JSONFOLDER}{file}.json'.replace('/', '\\')) # this function requires backslashes
                 files.pop(curr_pos)
 
                 console.updateList(files)
@@ -766,7 +788,7 @@ def json_file_loop(console, saved_pos=0):
 
         # update list of files (if link file has been restored)
         if command == key.CTRL_U:
-            files = sorted([file[:file.rfind('.')] for file in os.listdir(json_folder) if 'zip' not in file])
+            files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
             files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
             console.updateList(files)
@@ -778,14 +800,14 @@ def json_file_loop(console, saved_pos=0):
                 console.hideFiles = (console.separateInteraction(function=lambda: yes_or_no("Show hidden lists?", default_answer="no"), showCursor=True) == "no")
                 if not console.hideFiles:
                     curr_file = files[curr_pos]
-                    files = sorted([file[:file.rfind('.')] for file in os.listdir(json_folder) if 'zip' not in file])
+                    files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
 
                     console.updateList(files)
                     console.updatePos(files.index(curr_file))
             else:
                 console.hideFiles = True
                 curr_file = files[curr_pos]
-                files = sorted([file[:file.rfind('.')] for file in os.listdir(json_folder) if 'zip' not in file])
+                files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
                 files = list(filter(lambda file: file[0] != '.', files))
 
                 console.updateList(files)
