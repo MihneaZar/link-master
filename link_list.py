@@ -8,21 +8,13 @@ if not os.path.exists(f'{HOMEPATH}/.paths') or not os.path.isdir(f'{HOMEPATH}/js
     setup()
 
 paths  = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
-paths += [""] * (4 - len(paths)) # adding empty strings so that the following commands wont raise an error
-
 CONSOLE_PATH = paths[0]
-KEEP_EMAIL   = paths[1]
-KEEP_TOKEN   = paths[2]
-KEEP_FILE    = paths[3]
 
 if not os.path.exists(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
     print("Path to 'ConsoleListInterface.py' is broken, runnning setup again.")
     setup()
-
-sys.path.append(f'{CONSOLE_PATH}/ConsoleListInterface.py')
-
-if not KEEP_FILE: 
-    KEEP_FILE = f'{HOMEPATH}/keep_state.json'
+    paths  = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
+    CONSOLE_PATH = paths[0]
 
 sys.path.append(CONSOLE_PATH)
 
@@ -34,6 +26,12 @@ from functools import reduce
 import subprocess
 import requests
 import json
+
+paths += [""] * (4 - len(paths)) # adding empty strings so that the following commands wont raise an error
+
+KEEP_EMAIL = paths[1]
+KEEP_TOKEN = paths[2]
+KEEP_FILE  = paths[3]
 
 if not os.path.exists(KEEP_FILE):
     KEEP_FILE = f'{HOMEPATH}/.keep_state.json'
