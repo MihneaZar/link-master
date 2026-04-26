@@ -7,6 +7,9 @@ A Link List page contains multiple entries. An entry has a description (e.g. 'Di
 - The [ConsoleListInterface class](https://github.com/MihneaZar/ConsoleListInterface/).
 - The [python-readchar](https://pypi.org/project/readchar/) library.
 
+## Setup
+The setup() function from 'setup.py' will be run automatically if the 'json_data' folder is missing  
+
 ## Additional Information
 The program opens the links in Google Chrome / Google Incognito. <br>
 On first use, it will prompt user to give the path to the ConsoleInterfaceList.py file (containing the respective Class). <br>
@@ -28,11 +31,12 @@ Additionally, if KEEP_FILE in 'keep.py' is provided and is an existing file, the
 By default, the 'json_data' folder contains an 'Examples.json' file with the following examples for link formatting: <br>
 1. The first one has links to three dictionaries: [Thesaurus](https://www.thesaurus.com/browse/), [Merriam-Webster](https://www.merriam-webster.com/thesaurus/) and [Wordhippo](https://www.wordhippo.com/what-is/another-word-for/). Pressing 'enter' on this entry simply opens all three links.
 2. The second example is for a link to [Thesaurus](https://www.thesaurus.com/browse/) with an input-able word to search for: 'https://www.thesaurus.com/browse/\{Word to search for\\}'.<br>
-The '\\{Word to search for\\}' section will prompt the text 'Word to search for: ' on every link open, and will concatanate the response to the end of 'https://www.thesaurus.com/browse/'. Therefore, the user can search for words on [Thesaurus](https://www.thesaurus.com/browse/) directly from the program.
+The '\\{Word to search for\\}' section will prompt the text 'Word to search for: ' on every link open, and will concatanate the response to the end of 'https://www.thesaurus.com/browse/'. Therefore, the user can search for words on [Thesaurus](https://www.thesaurus.com/browse/) directly from the program. <br>
+The '\\{input_prompt\\}' section can be inserted into any part of the link, including the domain name.
 3. The third example is similar to the second, but it uses a variable: 'var search_str = \\{Word to search for\\}'. That way, all appearances of \\{search_str\\} in links will be changed with the response to the 'Word to search for: ' prompt. <br>
 The order does not matter, since the variables are first resolved, then the links are opened.
 <br>
 
 Additional Notes:
-- entering '?' when inputting links will provide instructions for the formatting of input-able links, and useful commands for removing existing links when editting;
+- entering '?' when inputting links will provide instructions for the formatting of input-able links, and useful commands for removing existing links whilst editting;
 - the slightly confusing '\\{input_prompt\\}' format is used so it does not interfere with valid characters in links (including, potentially, '{}').
