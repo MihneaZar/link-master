@@ -8,11 +8,12 @@ if not os.path.exists(f'{HOMEPATH}/.paths') or not os.path.isdir(f'{HOMEPATH}/js
     setup()
 
 paths  = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
-paths += [""] * (3 - len(paths)) # adding empty strings so that the following commands wont raise an error
+paths += [""] * (4 - len(paths)) # adding empty strings so that the following commands wont raise an error
 
 CONSOLE_PATH = paths[0]
-KEEP_TOKEN   = paths[1]
-KEEP_FILE    = paths[2]
+KEEP_EMAIL   = paths[1]
+KEEP_TOKEN   = paths[2]
+KEEP_FILE    = paths[3]
 
 if not os.path.exists(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
     print("Path to 'ConsoleListInterface.py' is broken, runnning setup again.")
@@ -104,9 +105,9 @@ def gkeep_upload(press_enter=True):
 
     print("Downloading newest versions of notes...")
     if os.path.exists(KEEP_FILE):
-        keep.authenticate('mihneabogzar@gmail.com', KEEP_TOKEN, state=json.load(open(KEEP_FILE)))
+        keep.authenticate(KEEP_EMAIL, KEEP_TOKEN, state=json.load(open(KEEP_FILE)))
     else:
-        keep.authenticate('mihneabogzar@gmail.com', KEEP_TOKEN)
+        keep.authenticate(KEEP_EMAIL, KEEP_TOKEN)
 
     label = keep.findLabel('Link Master')
     if not label:

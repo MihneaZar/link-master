@@ -11,10 +11,11 @@ A Link List page contains multiple entries. An entry has a description (e.g. 'Di
 The setup() function from 'setup.py' will be run automatically on the first 'link_master.py' launch.
 On top of creating the 'json_data' folder (where the app data is stored), it will prompt the user for three things:
 - (required) path to the folder where 'ConsoleListInterface.py' is located;
-- (optional) Google API Master Token;
+- (optional) Gmail Address;
+- (optional) Google Master Token;
 - (optional) Google Keep Cache filepath.
 
-The last two are for the functionality of saving to Google Keep, and are explained in the 'Google Keep' section. <br>
+The last three are for the functionality of saving to Google Keep, and are explained in the 'Google Keep' section. <br>
 The setup function can be rerun with 'python3 setup.py' to change any of the three fields.
 
 ## Additional Information
@@ -24,8 +25,9 @@ Only tested on Windows 11.
 
 ## Google Keep
 As an additional functionality, the program can save the Link Lists to Google Keep. <br>
-For this, it requires a Google API Master Token. <br>
-The explanation of how to acquire it is [here](https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token). <br>
+For this, it requires a Google Master Token. <br>
+The setup function requires a Google Access Token to obtain the Google Master Token. <br>
+The explanation of how to acquire a Google Access Token is [here](https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token). <br>
 !! Important Notes:
 - as the name suggests, the Master Token grants access to your **entire Google account**. Therefore, protect it with your life, and never share it or publish it online;
 - the program saves the link lists as separate Keep Notes under the label 'Link Master'. Do not add this label to any other notes, since the program deletes all previous notes labeled 'Link Master' before uploading the new Link Lists. <br>

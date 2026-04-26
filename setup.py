@@ -1,3 +1,4 @@
+import gpsoauth
 import os 
 
 HOMEPATH = os.path.dirname(os.path.realpath(__file__))
@@ -11,11 +12,12 @@ def setup():
     paths = []
     if os.path.exists(f'{HOMEPATH}/.paths'):
         paths  = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
-    paths += [""] * (3 - len(paths)) # adding empty strings so that the following commands wont raise an error
+    paths += [""] * (4 - len(paths)) # adding empty strings so that the following commands wont raise an error
 
     CONSOLE_PATH = paths[0]
-    KEEP_TOKEN   = paths[1]
-    KEEP_FILE    = paths[2]
+    KEEP_EMAIL   = paths[1]
+    KEEP_TOKEN   = paths[2]
+    KEEP_FILE    = paths[3]
 
     if not os.path.exists(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
         CONSOLE_PATH = ""
@@ -54,19 +56,56 @@ def setup():
     if not CONSOLE_PATH and not console_path:
         exit()
 
-    print("The following is for saving Link Lists to Google Keep. \
-          \nOnly the Master Token is required for this feature. \
-          \nAdditional details are in README.md.\n")
+    if console_path: 
+        CONSOLE_PATH = console_path
 
-    if KEEP_TOKEN:
-        print(f"Current saved Google API Master Token:\n{KEEP_TOKEN}") 
-    print("Please enter Google API Master Token (or leave empty to ", end = '')
-    if KEEP_TOKEN:
-        print("keep current token): ")
+    print("\nThe following is for saving Link Lists to Google Keep. \
+          \nFor this, the Gmail address and Master Token are required. \
+          \nAdditional details are in README.md.\n")
+    
+    if KEEP_EMAIL:
+        print(f"Current saved Gmail address:\n{KEEP_EMAIL}") 
+    print("Please enter your Gmail address (or leave empty to ", end = '')
+    if KEEP_EMAIL:
+        print("keep current address): ")
     else:
         print("skip): ")
     
-    keep_token = input()
+    keep_email = input()
+    
+    if keep_email:
+        KEEP_EMAIL = keep_email
+
+    print()
+
+    if KEEP_TOKEN:
+        print("There is a saved Master Token, but you can change it now.")
+    print("In order to obtain the Google Master Token, a Google Access Token is required. \
+          \nHere is how to obtain one: https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token \
+          \nNote: Access Tokens expire quickly, so if this fails, rerun this setup.")
+     
+    print("Please enter Google Access Token (or leave empty to ", end = '')
+    if KEEP_TOKEN:
+        print("keep current Master Token): ")
+    else:
+        print("skip): ")
+    
+    access_token = input()
+    while True:    
+        if access_token and not access_token.isspace():
+            try:
+                master_response = gpsoauth.exchange_token(KEEP_EMAIL, access_token, '0123456789abcdef')
+                if master_response['Token']:
+                    KEEP_TOKEN = master_response['Token']
+                    break
+                else:
+                    access_token = input("Authentification failed, try again, or leave this field empty to skip:\n")
+            except:
+                access_token = input("Authentification failed, try again, or leave this field empty to skip:\n")
+        else:
+            break
+
+    print()
 
     if KEEP_FILE:
         print(f"Current saved Google Keep Cache File:\n{KEEP_FILE}") 
@@ -96,14 +135,10 @@ def setup():
             if keep_file[-1] == '"':
                 keep_file = keep_file[:-1]
 
-    if console_path:
-        CONSOLE_PATH = console_path
-    if keep_token:
-        KEEP_TOKEN = keep_token
     if keep_file:
         KEEP_FILE = keep_file
 
-    open(f'{HOMEPATH}/.paths', 'w').write(f'{CONSOLE_PATH}\n{KEEP_TOKEN}\n{KEEP_FILE}\n')
+    open(f'{HOMEPATH}/.paths', 'w').write(f'{CONSOLE_PATH}\n{KEEP_EMAIL}\n{KEEP_TOKEN}\n{KEEP_FILE}\n')
 
 
 if __name__ == "__main__":
