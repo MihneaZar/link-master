@@ -6,6 +6,7 @@ A Link List page contains multiple entries. An entry has a description (e.g. 'Di
 ## Requirements
 - The [ConsoleListInterface class](https://github.com/MihneaZar/ConsoleListInterface/).
 - The [python-readchar](https://pypi.org/project/readchar/) library.
+- The [gkeepapi](https://github.com/kiwiz/gkeepapi) and [gpsoauth](https://github.com/simon-weber/gpsoauth) libraries, to be able to upload notes to Google Keep. 
 
 ## Setup
 The setup() function from 'setup.py' will be run automatically on the first 'link_master.py' launch.
