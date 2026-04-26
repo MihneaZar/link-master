@@ -8,7 +8,7 @@ A Link List page contains multiple entries. An entry has a description (e.g. 'Di
 - The [python-readchar](https://pypi.org/project/readchar/) library.
 
 ## Additional Information
-For the program to run, 'json_data_clean' and 'keep_clean.py' need to be renamed to 'json_data' and 'keep.py'
+For the program to run, 'json_data_clean' and 'keep_clean.py' need to be renamed to 'json_data' and 'keep.py'. <br>
 The program opens the links in Google Chrome / Google Incognito. <br>
 On first use, it will prompt user to give the path to the ConsoleInterfaceList.py file (containing the respective Class). <br>
 Typing '?' while in the app will print the help page (for the Link Master Menu page, or the Link List page). <br>
