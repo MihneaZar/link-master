@@ -7,13 +7,13 @@ HOMEPATH = os.path.dirname(os.path.realpath(__file__))
 if not os.path.exists(f'{HOMEPATH}/.paths') or not os.path.isdir(f'{HOMEPATH}/json_data'):
     setup()
 
-paths  = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
+paths = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
 CONSOLE_PATH = paths[0]
 
 if not os.path.exists(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
     print("Path to 'ConsoleListInterface.py' is broken, runnning setup again.")
     setup()
-    paths  = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
+    paths = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
     CONSOLE_PATH = paths[0]
 
 sys.path.append(CONSOLE_PATH)
