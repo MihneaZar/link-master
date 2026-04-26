@@ -18,7 +18,7 @@ Only tested on Windows 11.
 As an additional functionality, the program can save the Link Lists to Google Keep. <br>
 For this, it requires a Google API Master Token. <br>
 The explanation of how to acquire it is [here](https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token). <br>
-To make it work in the app, change the name of 'keep_clean.py' to 'keep.py' and paste the Master Token into the KEEP_TOKEN variable. 
+To make it work in the app, change the name of 'keep_clean.py' to 'keep.py' and paste the Master Token into the KEEP_TOKEN variable. <br>
 !! Important Notes:
 - as the name suggests, the Master Token grants access to your **entire Google account**. Therefore, protect it with your life, and never share it/publish it online;
 - the program saves the links lists as separate Keep Notes under the label 'Link Master'. Do not add this label to any other notes, since the program deletes all previous notes labeled 'Link Master' before uploading the new Link Lists.
