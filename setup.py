@@ -96,6 +96,7 @@ def setup():
             try:
                 master_response = gpsoauth.exchange_token(KEEP_EMAIL, access_token, '0123456789abcdef')
                 if master_response['Token']:
+                    print("Authentification is successful, Master Token obtained.")
                     KEEP_TOKEN = master_response['Token']
                     break
                 else:
