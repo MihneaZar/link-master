@@ -1,32 +1,31 @@
+from setup import setup
 import sys
 import os
 
 HOMEPATH = os.path.dirname(os.path.realpath(__file__))
 
-if ".paths" not in os.listdir(HOMEPATH):
-    console_path = input("Please type path to directory of ConsoleListInterface.py (or leave empty to cancel):\n")
-    if console_path[0] == '"':
-        console_path = console_path[1:]
-    if console_path[-1] == '"':
-        console_path = console_path[:-1]
-    
-    while console_path and not console_path.isspace() and not os.path.exists(f'{console_path}/ConsoleListInterface.py'):
-        console_path = input("\nConsoleListInterface.py not found, please download and type path to directory:\n") 
-        if console_path[0] == '"':
-            console_path = console_path[1:]
-        if console_path[-1] == '"':
-            console_path = console_path[:-1]
-    
-    if not console_path or console_path.isspace():
-        quit()
+if not os.path.exists(f'{HOMEPATH}/.paths') or not os.path.isdir(f'{HOMEPATH}/json_data'):
+    setup()
 
-    open(f'{HOMEPATH}/.paths', 'w').write(console_path)
+paths  = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
+paths += [""] * (3 - len(paths)) # adding empty strings so that the following commands wont raise an error
 
-sys.path.append(open(f'{HOMEPATH}/.paths').read())
+CONSOLE_PATH = paths[0]
+KEEP_TOKEN   = paths[1]
+KEEP_FILE    = paths[2]
 
+if not os.path.exists(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
+    print("Path to 'ConsoleListInterface.py' is broken, runnning setup again.")
+    setup()
+
+sys.path.append(f'{CONSOLE_PATH}/ConsoleListInterface.py')
+
+if not KEEP_FILE: 
+    KEEP_FILE = f'{HOMEPATH}/keep_state.json'
+
+sys.path.append(CONSOLE_PATH)
 
 from ConsoleListInterface import ConsoleListInterface, waitForEnter # pyright: ignore[reportMissingImports]
-from keep import KEEP_FILE, KEEP_TOKEN
 from readchar import readkey, key
 from send2trash import send2trash
 from blessed import Terminal
@@ -91,7 +90,7 @@ def gkeep_upload(press_enter=True):
     if not KEEP_TOKEN:
         print("Keep Token missing. \
             \nPlease follow the explanations at https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token to obtain it. \
-            \nThen add it to 'keep.py' as the string value for the KEEP_TOKEN variable. \
+            \nThen add it by running setup again. \
             \n\nPress enter to continue.")
         
         waitForEnter()
