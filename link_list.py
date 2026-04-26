@@ -751,6 +751,13 @@ def json_file_loop(console, saved_pos=0):
                 
                 os.rename(f'{JSONFOLDER}{file}.json', f'{JSONFOLDER}{filename}.json')
 
+                # updating filename in json file
+                json_data = json.load(open(f'{JSONFOLDER}{filename}.json'))
+                json_data["Filename"] = filename
+
+                with open(f'{JSONFOLDER}{filename}.json', 'w', encoding='utf-8') as file:
+                    json.dump(json_data, file, ensure_ascii=False, indent=4)
+
                 files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
                 files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
                     
@@ -758,8 +765,9 @@ def json_file_loop(console, saved_pos=0):
                 if filename in files:
                     console.updatePos(files.index(filename))
                 
-            except:
-                console.separateInteraction(message="Illegal character used in name.\n")
+            except Exception as e:
+                console.separateInteraction(message=e)
+                # console.separateInteraction(message="Illegal character used in name.\n")
 
             continue
 
