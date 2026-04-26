@@ -8,9 +8,9 @@ A Link List page contains multiple entries. An entry has a description (e.g. 'Di
 - The [python-readchar](https://pypi.org/project/readchar/) library.
 
 ## Setup
-The setup() function from 'setup.py' will be run automatically if the 'json_data' folder or the '.paths' file are missing.
+The setup() function from 'setup.py' will be run automatically on the first 'link_master.py' launch.
 On top of creating the 'json_data' folder (where the app data is stored), it will prompt the user for three things:
-- (obligatory) path to the folder where  'ConsoleListInterface.py' is located;
+- (required) path to the folder where 'ConsoleListInterface.py' is located;
 - (optional) Google API Master Token;
 - (optional) Google Keep Cache filepath.
 
@@ -19,8 +19,7 @@ The setup function can be rerun with 'python3 setup.py' to change any of the thr
 
 ## Additional Information
 The program opens the links in Google Chrome / Google Incognito. <br>
-On first use, it will prompt user to give the path to the ConsoleInterfaceList.py file (containing the respective Class). <br>
-Typing '?' while in the app will print the help page (for the Link Master Menu page, or the Link List page). <br>
+Typing '?' while in the app will print the help pages (for the Link Master Menu, or the Link List page). <br>
 Only tested on Windows 11.
 
 ## Google Keep
@@ -28,8 +27,8 @@ As an additional functionality, the program can save the Link Lists to Google Ke
 For this, it requires a Google API Master Token. <br>
 The explanation of how to acquire it is [here](https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token). <br>
 !! Important Notes:
-- as the name suggests, the Master Token grants access to your **entire Google account**. Therefore, protect it with your life, and never share it/publish it online;
-- the program saves the link lists as separate Keep Notes under the label 'Link Master'. Do not add this label to any other notes, since the program deletes all previous notes labeled 'Link Master' before uploading the new Link Lists.<br>
+- as the name suggests, the Master Token grants access to your **entire Google account**. Therefore, protect it with your life, and never share it or publish it online;
+- the program saves the link lists as separate Keep Notes under the label 'Link Master'. Do not add this label to any other notes, since the program deletes all previous notes labeled 'Link Master' before uploading the new Link Lists. <br>
 
 Additionally, if the path of an existing file is provided in the 'Google Keep Cache File' part of the setup, the program will save the Google Keep cache there (can be useful for a cache shared between programs). Otherwise, it will save it in the program folder as  'keep_state.json'.
 
