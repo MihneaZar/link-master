@@ -646,7 +646,7 @@ def link_list_loop(console, json_file_path, saved_pos):
             console.exitInterface()
 
             # uploading to google keep if changes to links haven't been uploaded
-            if console.upload:
+            if console.upload and KEEP_TOKEN:
                 gkeep_upload(False)
             quit()
 
@@ -842,7 +842,7 @@ def json_file_loop(console, saved_pos=0):
             console.exitInterface()
             
             # uploading to google keep if changes to links haven't been uploaded
-            if console.upload:
+            if console.upload and KEEP_TOKEN:
                 gkeep_upload(False)
             quit()
 
