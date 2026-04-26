@@ -84,9 +84,6 @@ def yes_or_no(question, default_answer="yes", other_options=[], newline=True):
     return None
 
 
-KEEP_FILE  = "C:/Users/Mihnea/Desktop/Random thoughts/Cool stuff/.keep/keep_state.json"
-KEEP_TOKEN = "aas_et/AKppINbzDsWtVr-wIsovNrZLJJDKmiscplKnt9A--GJW59wbW5hKRCxaqvsfOAteSD_nir_JxPm5RiFfjmYAl482ZDR6rHIY0aO3GjFG25M9UY6srOV__tkMMcPc9nMwj1O8eWomqskOztUEGPYS1Dd4kjnkUpAU9vae8U5T7MwlWiSrUi4-17z-OqHHrqMxcw1yZcoSCyEe7KiQQmIgwyo="
-
 def gkeep_upload(press_enter=True):
     print("Starting Google Keep upload...")
     
