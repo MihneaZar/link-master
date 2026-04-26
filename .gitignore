@@ -2,5 +2,6 @@ __pycache__/
 errors.txt
 json_data/
 json_data_old_save/
-keep.py
 .paths
+keep.py
+keep.json

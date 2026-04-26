@@ -25,6 +25,11 @@ if ".paths" not in os.listdir(HOMEPATH):
 sys.path.append(open(f'{HOMEPATH}/.paths').read())
 
 
+if not os.path.exists(f'{HOMEPATH}/keep.py'):
+    print("Please rename 'keep_clean.py' to 'keep.py'.")
+    quit()
+
+
 from ConsoleListInterface import ConsoleListInterface, waitForEnter # pyright: ignore[reportMissingImports]
 from keep import KEEP_FILE, KEEP_TOKEN
 from readchar import readkey, key
@@ -34,6 +39,9 @@ from functools import reduce
 import subprocess
 import requests
 import json
+
+if not os.path.exists(KEEP_FILE):
+    KEEP_FILE = f'{HOMEPATH}/.keep_state.json'
 
 term = Terminal()
 
@@ -85,6 +93,15 @@ def yes_or_no(question, default_answer="yes", other_options=[], newline=True):
 
 
 def gkeep_upload(press_enter=True):
+    if not KEEP_TOKEN:
+        print("Keep Token missing. \
+            \nPlease follow the explanations at https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token to obtain it. \
+            \nThen add it to 'keep.py' as the string value for the KEEP_TOKEN variable. \
+            \n\nPress enter to continue.")
+        
+        waitForEnter()
+        return
+
     print("Starting Google Keep upload...")
     
     import gkeepapi

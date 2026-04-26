@@ -21,7 +21,9 @@ The explanation of how to acquire it is [here](https://github.com/rukins/gpsoaut
 To make it work in the app, change the name of 'keep_clean.py' to 'keep.py' and paste the Master Token into the KEEP_TOKEN variable. <br>
 !! Important Notes:
 - as the name suggests, the Master Token grants access to your **entire Google account**. Therefore, protect it with your life, and never share it/publish it online;
-- the program saves the links lists as separate Keep Notes under the label 'Link Master'. Do not add this label to any other notes, since the program deletes all previous notes labeled 'Link Master' before uploading the new Link Lists.
+- the program saves the links lists as separate Keep Notes under the label 'Link Master'. Do not add this label to any other notes, since the program deletes all previous notes labeled 'Link Master' before uploading the new Link Lists.<br>
+
+Additionally, if KEEP_FILE in 'keep.py' is provided and is an existing file, the program will save the Google Keep cache there (can be useful as a cache shared between programs). 
 
 ## Example Entries
 TODO
