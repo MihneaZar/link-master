@@ -635,8 +635,11 @@ def link_list_loop(console, json_file_path, saved_pos):
 
         # uploading to drive
         if command == key.CTRL_K:
-            console.separateInteraction(function=gkeep_upload)
-            
+           try:    console.separateInteraction(function=gkeep_upload)
+           except Exception as e:
+                console.separateInteraction(message=str(e))
+               console.separateInteraction(message=type(e))
+           
             console.upload = False # app just uploaded to google keep, so no reason to do it again
             continue
 
