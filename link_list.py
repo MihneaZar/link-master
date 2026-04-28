@@ -27,11 +27,11 @@ import subprocess
 import requests
 import json
 
-paths += [""] * (4 - len(paths)) # adding empty strings so that the following commands wont raise an error
+paths += [""] * (3 - len(paths)) # adding empty strings so that the following commands wont raise an error
 
-KEEP_EMAIL = paths[1]
-KEEP_TOKEN = paths[2]
-KEEP_FILE  = paths[3]
+KEEP_EMAIL = ""
+KEEP_TOKEN = paths[1]
+KEEP_FILE  = paths[2]
 
 if not os.path.exists(KEEP_FILE):
     KEEP_FILE = f'{HOMEPATH}/.keep_state.json'
@@ -619,13 +619,13 @@ def link_list_loop(console, json_file_path, saved_pos):
 
         # uploading to drive
         if command == key.CTRL_K:
-           try:    console.separateInteraction(function=gkeep_upload)
-           console.upload = False # app just uploaded to google keep, so no reason to do it again
+            try:    
+                console.separateInteraction(function=gkeep_upload)
 
-           except Exception as e:
+            except Exception as e:
                 console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
-           
             
+            console.upload = False # either the upload succeeded, so no need to upload again, or it failed, and it will fail again
             continue
 
 
@@ -640,7 +640,10 @@ def link_list_loop(console, json_file_path, saved_pos):
 
             # uploading to google keep if changes to links haven't been uploaded
             if console.upload and KEEP_TOKEN:
-                gkeep_upload(False)
+                try:
+                    gkeep_upload(False)
+                except Exception as e:
+                    console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
             quit()
 
 
@@ -829,7 +832,13 @@ def json_file_loop(console, saved_pos=0):
 
         # uploading to drive
         if command == key.CTRL_K:
-            console.separateInteraction(function=gkeep_upload)
+            try:    
+                console.separateInteraction(function=gkeep_upload)
+
+            except Exception as e:
+                console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
+            
+            console.upload = False # either the upload succeeded, so no need to upload again, or it failed, and it will fail again
             continue
 
 
@@ -844,7 +853,10 @@ def json_file_loop(console, saved_pos=0):
             
             # uploading to google keep if changes to links haven't been uploaded
             if console.upload and KEEP_TOKEN:
-                gkeep_upload(False)
+                try:
+                    gkeep_upload(False)
+                except Exception as e:
+                    console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
             quit()
 
 

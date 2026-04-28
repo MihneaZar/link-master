@@ -2,6 +2,8 @@ import os
 
 HOMEPATH = os.path.dirname(os.path.realpath(__file__))
 
+KEEP_EMAIL = ""
+
 def setup():
     if not os.path.exists(f'{HOMEPATH}/json_data'):
         os.mkdir(f'{HOMEPATH}/json_data')
@@ -11,12 +13,12 @@ def setup():
     paths = []
     if os.path.exists(f'{HOMEPATH}/.paths'):
         paths  = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
-    paths += [""] * (4 - len(paths)) # adding empty strings so that the following commands wont raise an error
+        
+    paths += [""] * (3 - len(paths)) # adding empty strings so that the following commands wont raise an error
 
     CONSOLE_PATH = paths[0]
-    KEEP_EMAIL   = paths[1]
-    KEEP_TOKEN   = paths[2]
-    KEEP_FILE    = paths[3]
+    KEEP_TOKEN   = paths[1]
+    KEEP_FILE    = paths[2]
 
     if not os.path.exists(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
         CONSOLE_PATH = ""
@@ -67,25 +69,6 @@ def setup():
     print("\nThe following is for saving Link Lists to Google Keep. \
           \nFor this, the Gmail address and Master Token are required. \
           \nAdditional details are in README.md.\n")
-    
-    if KEEP_EMAIL:
-        print(f"Current saved Gmail address:\n{KEEP_EMAIL}") 
-    print("Please enter your Gmail address (or leave empty to ", end = '')
-    if KEEP_EMAIL:
-        print("keep current address): ")
-    else:
-        print("skip): ")
-    
-    keep_email = input()
-    
-    if keep_email and not keep_email.isspace():
-        KEEP_EMAIL = keep_email
-
-    print()
-    if not KEEP_EMAIL:
-        print("Email not provided.\nFinishing setup."
-        open(f'{HOMEPATH}/.paths', 'w').write(f'{CONSOLE_PATH}\n{KEEP_EMAIL}\n{KEEP_TOKEN}\n{KEEP_FILE}\n')
-        return
 
     if KEEP_TOKEN:
         print("There is a saved Master Token, but you can change it now.")
@@ -117,7 +100,7 @@ def setup():
 
     print()
     if not KEEP_TOKEN:
-        print("Master Token not acquired.\nFinishing setup."
+        print("Master Token not acquired.\nFinishing setup.")
         open(f'{HOMEPATH}/.paths', 'w').write(f'{CONSOLE_PATH}\n{KEEP_EMAIL}\n{KEEP_TOKEN}\n{KEEP_FILE}\n')
         return
 
