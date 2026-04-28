@@ -7,6 +7,8 @@ A Link List page contains multiple entries. An entry has a description (e.g. 'Di
 - The [ConsoleListInterface](https://github.com/MihneaZar/ConsoleListInterface/) class for the console interface;
 - The [python-readchar](https://pypi.org/project/readchar/) library for reading keystrokes;
 - The [cursor](https://pypi.org/project/cursor/) library for hiding the cursor in console;
+- The [Requests](https://pypi.org/project/requests/) library for downloading website reponses directly;
+- The [Send2Trash](https://pypi.org/project/Send2Trash/) library for sending files to trash/recycle bin;
 - (Optional) The [gpsoauth](https://github.com/simon-weber/gpsoauth) library for obtaining the Google Master Token, needed for uploading to Google Keep;
 - (Optional) The [gkeepapi](https://github.com/kiwiz/gkeepapi) library for actually uploading notes to Google Keep.
 
