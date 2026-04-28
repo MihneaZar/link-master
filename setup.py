@@ -82,6 +82,10 @@ def setup():
         KEEP_EMAIL = keep_email
 
     print()
+    if not KEEP_EMAIL:
+        print("Email not provided.\nFinishing setup."
+        open(f'{HOMEPATH}/.paths', 'w').write(f'{CONSOLE_PATH}\n{KEEP_EMAIL}\n{KEEP_TOKEN}\n{KEEP_FILE}\n')
+        return
 
     if KEEP_TOKEN:
         print("There is a saved Master Token, but you can change it now.")
@@ -112,6 +116,10 @@ def setup():
             break
 
     print()
+    if not KEEP_TOKEN:
+        print("Master Token not acquired.\nFinishing setup."
+        open(f'{HOMEPATH}/.paths', 'w').write(f'{CONSOLE_PATH}\n{KEEP_EMAIL}\n{KEEP_TOKEN}\n{KEEP_FILE}\n')
+        return
 
     if KEEP_FILE:
         print(f"Current saved Google Keep Cache File:\n{KEEP_FILE}") 
