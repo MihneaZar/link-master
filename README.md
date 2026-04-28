@@ -11,7 +11,7 @@ A Link List page contains multiple entries. An entry has a description (e.g. 'Di
 - (Optional) The [gkeepapi](https://github.com/kiwiz/gkeepapi) for actually uploading notes to Google Keep.
 
 ## Setup
-The setup() function from 'setup.py' will be run automatically on the first 'link_master.py' launch.
+The setup() function from '[setup.py](setup.py)' will be run automatically on the first 'link_master.py' launch.
 On top of creating the 'json_data' folder (where the app data is stored), it will prompt the user for three things:
 - (required) path to the folder where 'ConsoleListInterface.py' is located;
 - (optional) Gmail Address;
