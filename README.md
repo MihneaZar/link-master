@@ -33,7 +33,7 @@ The setup function requires a Google Access Token to obtain the Google Master To
 The explanation of how to acquire a Google Access Token is [here](https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token). <br>
 !! Important Notes:
 - as the name suggests, the Master Token grants access to your **entire Google account**. Therefore, protect it with your life, and never share it or publish it online;
-- the app saves the Master Token in a file named '.paths' in the same folder as [link_master.py](link_master.py). The Master Token is required for Google Keep uploads, but this feature is completely optional;
+- the app saves the Master Token in a file named '.paths' in the same folder as [link_list.py](link_list.py). The Master Token is required for Google Keep uploads, but this feature is completely optional;
 - the program saves the link lists as separate Keep Notes under the label 'Link Master'. Do not add this label to any other notes, since the program deletes all previous notes labeled 'Link Master' before uploading the new Link Lists. <br>
 
 Additionally, if the path of an existing file is provided in the 'Google Keep Cache File' part of the setup, the program will save the Google Keep cache there (can be useful for a cache shared between programs). Otherwise, it will save it in the program folder as  'keep_state.json'.
