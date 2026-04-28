@@ -7,8 +7,8 @@ A Link List page contains multiple entries. An entry has a description (e.g. 'Di
 - The [ConsoleListInterface](https://github.com/MihneaZar/ConsoleListInterface/) class for the console interface;
 - The [python-readchar](https://pypi.org/project/readchar/) library for reading keystrokes;
 - The [cursor](https://pypi.org/project/cursor/) library for hiding the cursor in console;
-- (Optional) The [gpsoauth](https://github.com/simon-weber/gpsoauth) for obtaining Google Master Token, needed for uploading to Google Keep;
-- (Optional) The [gkeepapi](https://github.com/kiwiz/gkeepapi) for actually uploading notes to Google Keep.
+- (Optional) The [gpsoauth](https://github.com/simon-weber/gpsoauth) library for obtaining the Google Master Token, needed for uploading to Google Keep;
+- (Optional) The [gkeepapi](https://github.com/kiwiz/gkeepapi) library for actually uploading notes to Google Keep.
 
 ## Setup
 The setup() function from [setup.py](setup.py) will be run automatically on the first 'link_master.py' launch.
@@ -33,6 +33,7 @@ The setup function requires a Google Access Token to obtain the Google Master To
 The explanation of how to acquire a Google Access Token is [here](https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token). <br>
 !! Important Notes:
 - as the name suggests, the Master Token grants access to your **entire Google account**. Therefore, protect it with your life, and never share it or publish it online;
+- the app saves the Master Token in a file named '.paths' in the same folder as [link_master.py](link_master.py). The Master Token is required for Google Keep uploads, but this feature is completely optional;
 - the program saves the link lists as separate Keep Notes under the label 'Link Master'. Do not add this label to any other notes, since the program deletes all previous notes labeled 'Link Master' before uploading the new Link Lists. <br>
 
 Additionally, if the path of an existing file is provided in the 'Google Keep Cache File' part of the setup, the program will save the Google Keep cache there (can be useful for a cache shared between programs). Otherwise, it will save it in the program folder as  'keep_state.json'.
@@ -49,4 +50,4 @@ The order does not matter, since the variables are first resolved, then the link
 
 Additional Notes:
 - entering '?' when inputting links will provide instructions for the formatting of input-able links, and useful commands for removing existing links whilst editting;
-- the slightly confusing '\\{input_prompt\\}' format is used so it does not interfere with valid characters in links (including, potentially, '{}').
+- the slightly confusing '\\{input_prompt\\}' format is used so it does not interfere with valid characters in links (including, potentially, '{' and '}').
