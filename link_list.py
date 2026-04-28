@@ -86,22 +86,6 @@ def yes_or_no(question, default_answer="yes", other_options=[], newline=True):
 
 
 def gkeep_upload(press_enter=True):
-    missing = False
-    if not KEEP_EMAIL:
-        print("Keep Email missing.\nPlease add by rerunning setup.")
-        missing = True
-    if not KEEP_TOKEN:
-        print("Keep Token missing. \
-            \nPlease follow the explanations at https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token to obtain it. \
-            \nThen add it by running setup again. \
-            \n\nPress enter to continue.")
-            
-        missing = True
-
-    if missing: 
-        waitForEnter()
-        return
-
     print("Starting Google Keep upload...")
     
     import gkeepapi
@@ -636,11 +620,12 @@ def link_list_loop(console, json_file_path, saved_pos):
         # uploading to drive
         if command == key.CTRL_K:
            try:    console.separateInteraction(function=gkeep_upload)
+           console.upload = False # app just uploaded to google keep, so no reason to do it again
+
            except Exception as e:
-                console.separateInteraction(message=str(e))
-               console.separateInteraction(message=type(e))
+                console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
            
-            console.upload = False # app just uploaded to google keep, so no reason to do it again
+            
             continue
 
 
