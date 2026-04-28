@@ -1,4 +1,3 @@
-import gpsoauth
 import os 
 
 HOMEPATH = os.path.dirname(os.path.realpath(__file__))
@@ -58,6 +57,12 @@ def setup():
 
     if console_path: 
         CONSOLE_PATH = console_path
+
+    try:
+        import gpsoauth
+    except:
+        print("'gpsoauth' library missing.\nInstall library in order to be able to receive the token needed for uploading link lists to Google Keep.\nHowever, Link Master can be used without this feature.")
+        return
 
     print("\nThe following is for saving Link Lists to Google Keep. \
           \nFor this, the Gmail address and Master Token are required. \
