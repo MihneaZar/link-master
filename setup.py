@@ -6,7 +6,7 @@ sys.stderr = open(f'{HOMEPATH}/errors.txt', "a")
 
 CONSOLE_PATH_ERROR = "Path to ConsoleListInterface.py is broken."
 
-def setup():
+def setup(from_link_list=True):
     if not os.path.exists(f'{HOMEPATH}/json_data'):
         os.mkdir(f'{HOMEPATH}/json_data')
         if os.path.exists(f'{HOMEPATH}/Examples.json'):
@@ -23,7 +23,10 @@ def setup():
     KEEP_FILE    = paths[2]
 
     if CONSOLE_PATH and not CONSOLE_PATH.isspace() and not os.path.exists(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
-        CONSOLE_PATH = CONSOLE_PATH_ERROR
+        if from_link_list:
+            CONSOLE_PATH = ""
+        else:
+            CONSOLE_PATH = CONSOLE_PATH_ERROR
 
     if CONSOLE_PATH and CONSOLE_PATH != CONSOLE_PATH_ERROR:
         print(f"Current saved directory for 'ConsoleListInterface.py':\n{CONSOLE_PATH}")
@@ -158,7 +161,7 @@ def setup():
     open(f'{HOMEPATH}/.paths', 'w').write(f'{CONSOLE_PATH}\n{KEEP_TOKEN}\n{KEEP_FILE}\n')
 
     print()
-    try_upload = yes_or_no("Would you like to DO a test upload (also creates the Keep Cache, which is slower on the first upload)?") == "yes"
+    try_upload = yes_or_no("Would you like to do a test upload (also creates the Keep Cache, which is slower on the first upload)?") == "yes"
 
     if try_upload:
         try:
@@ -166,7 +169,7 @@ def setup():
         except Exception as e:
             print(f"\nError: '{type(e).__name__}'.")
             if type(e).__name__ == 'LoginException':
-                print("Master Token authentification failed, check that the token is correct or retry obtaining it with an Access Token.")
+                print("Master Token authentification failed, check that it is correct or retry obtaining it with an Access Token.")
             elif type(e).__name__ == 'ModuleNotFoundError':
                 print("The 'gkeepapi' library is missing.\nPlease install it with 'pip3 install gkeepapi' to be able to upload the link lists to Google Keep.")
             elif type(e).__name__ == 'FileNotFoundError' or type(e).__name__ == 'OSError':
@@ -176,6 +179,13 @@ def setup():
                 print("Unknown error type.")
             print()
 
+        if from_link_list:
+            sys.path.append(CONSOLE_PATH)
+            from ConsoleListInterface import waitForEnter # pyright: ignore[reportMissingImports]
+
+            print("Press enter to continue.")
+            waitForEnter()
+
 
 if __name__ == "__main__":
-    setup()
+    setup(False)

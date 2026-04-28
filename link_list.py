@@ -6,7 +6,7 @@ import os
 if not os.path.exists(f'{HOMEPATH}/.paths') or not os.path.isdir(f'{HOMEPATH}/json_data'):
     setup()
 
-CONSOLE_PATH = open(f'{HOMEPATH}/.paths').readline()
+CONSOLE_PATH = open(f'{HOMEPATH}/.paths').readline().replace('\n', '')
 
 if not os.path.exists(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
     print("Path to 'ConsoleListInterface.py' is broken, runnning setup again.")
