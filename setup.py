@@ -52,11 +52,11 @@ def setup():
             if console_path[-1] == '"':
                 console_path = console_path[:-1]
 
-    if not CONSOLE_PATH and not console_path:
-        exit()
-
     if console_path: 
         CONSOLE_PATH = console_path
+
+    if not CONSOLE_PATH:
+        exit()
 
     try:
         import gpsoauth
@@ -78,7 +78,7 @@ def setup():
     
     keep_email = input()
     
-    if keep_email:
+    if keep_email and not keep_email.isspace():
         KEEP_EMAIL = keep_email
 
     print()
