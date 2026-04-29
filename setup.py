@@ -149,9 +149,9 @@ def setup(from_link_list=True):
         elif not os.path.exists(keep_file): 
             keep_file = input("Keep Cache not found, please try again:\n")
         else:
-            use_cache = yes_or_no("File found. Warning: if this is not already a Google Keep cache, this file will be overwritten and its contents will be lost.\nAre you sure you want to use this file as a Google Keep cache?", default_answer="no") == "yes"
+            use_cache = yes_or_no("File found.\nWarning: if this is not already a Google Keep cache, this file will be overwritten and its contents will be lost.\nAre you sure you want to use this file as a Google Keep cache?", default_answer="no") == "yes"
             if use_cache:
-                return
+                break
             else:
                 print("Please enter path to cache file (or leave empty to ", end = '')
                 if KEEP_FILE:
