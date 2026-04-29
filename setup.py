@@ -1,4 +1,4 @@
-from shared import HOMEPATH, KEEP_EMAIL, yes_or_no, gkeep_upload
+from shared import HOMEPATH, KEEP_EMAIL, get_path, yes_or_no, gkeep_upload
 import sys
 import os 
 
@@ -39,25 +39,10 @@ def setup(from_link_list=True):
     else:
         print("cancel): ")
 
-    console_path = input()
-    if console_path:
-        if console_path[0] == '"':
-            console_path = console_path[1:]
-        if console_path[-1] == '"':
-            console_path = console_path[:-1]
+    console_path = get_path(input(), check_dir=True)
     
-    while (console_path and not console_path.isspace() and not os.path.exists(f'{console_path}/ConsoleListInterface.py')) \
-            or ('./' in console_path or '.\\' in console_path): 
-        # avoiding relative paths, they might cause issues
-        if ('./' in console_path or '.\\' in console_path): 
-            console_path = input("Please use the absolute path:\n") 
-        else: 
-            console_path = input("ConsoleListInterface.py not found, please try again:\n") 
-        if console_path:
-            if console_path[0] == '"':
-                console_path = console_path[1:]
-            if console_path[-1] == '"':
-                console_path = console_path[:-1]
+    while console_path and not os.path.exists(f'{console_path}/ConsoleListInterface.py'): 
+        console_path = get_path(input("ConsoleListInterface.py not found, please try again:\n"), check_dir=True)
 
     if console_path: 
         CONSOLE_PATH = console_path
