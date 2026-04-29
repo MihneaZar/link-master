@@ -19,6 +19,18 @@ LINKS        = "Links"
 
 KEEP_EMAIL = ""
 
+
+def get_path(path, must_exist=True, check_dir=False, check_file=False, replace_quotes=True):
+    realpath = os.path.realpath(path)
+    if replace_quotes:
+        realpath = realpath.replace('\"', '')
+        realpath = realpath.replace('\'', '')
+    if realpath == "" or realpath.isspace() or (must_exist and not os.path.exists(realpath)) or (check_dir and not os.path.isdir(realpath)) or (check_file and not os.path.isfile(realpath)):
+        realpath = None
+    
+    return realpath
+
+
 def yes_or_no(question, default_answer="yes", other_options=[], newline=True):
     options = ["yes", "no"] + list(map(lambda opt: opt.lower(), other_options))
     list_other_options = list(filter(lambda opt: opt != "", other_options))
