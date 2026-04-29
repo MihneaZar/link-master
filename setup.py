@@ -39,10 +39,18 @@ def setup(from_link_list=True):
     else:
         print("cancel): ")
 
-    console_path = get_path(input(), check_dir=True)
-    
-    while console_path and not os.path.exists(f'{console_path}/ConsoleListInterface.py'): 
-        console_path = get_path(input("ConsoleListInterface.py not found, please try again:\n"), check_dir=True)
+    while True: 
+        try:
+            console_path = get_path(input(), check_dir=True)
+            accepted = os.path.exists(f'{console_path}/ConsoleListInterface.py')
+        except Exception as e:
+            console_path = ""
+            accepted = str(e) in ["empty", "space"]
+        finally:
+            if accepted:
+                break
+            else:
+                print("ConsoleListInterface.py not found, please try again:")
 
     if console_path: 
         CONSOLE_PATH = console_path

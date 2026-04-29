@@ -21,12 +21,26 @@ KEEP_EMAIL = ""
 
 
 def get_path(path, must_exist=True, check_dir=False, check_file=False, replace_quotes=True):
+    if path == "":
+        raise ValueError("empty")
+    
+    if path.isspace():
+        raise ValueError("space")
+    
     realpath = os.path.realpath(path)
+    
+    if must_exist and not os.path.exists(realpath):
+        raise ValueError("not exists")
+    
+    if check_dir and not os.path.isdir(realpath):
+        raise ValueError("not dir")
+    
+    if check_file and not os.path.isfile(realpath):
+        raise ValueError("not file")
+
     if replace_quotes:
         realpath = realpath.replace('\"', '')
         realpath = realpath.replace('\'', '')
-    if realpath == "" or realpath.isspace() or (must_exist and not os.path.exists(realpath)) or (check_dir and not os.path.isdir(realpath)) or (check_file and not os.path.isfile(realpath)):
-        realpath = None
     
     return realpath
 
