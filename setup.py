@@ -104,7 +104,7 @@ def setup(from_link_list=True):
                     try:
                         master_response = gpsoauth.exchange_token(KEEP_EMAIL, access_token, '0123456789abcdef')
                         if master_response['Token']:
-                            print("Authentification is successful, Master Token obtained.")
+                            print("Authentification successful, Master Token obtained.")
                             KEEP_TOKEN = master_response['Token']
                             break
                         else:
@@ -140,15 +140,25 @@ def setup(from_link_list=True):
         if keep_file[-1] == '"':
             keep_file = keep_file[:-1]
     
-    while (keep_file and not keep_file.isspace() and (not os.path.exists(keep_file) or os.path.isdir(keep_file))) \
-            or ('./' in keep_file or '.\\' in keep_file): 
+    while (keep_file and not keep_file.isspace()): 
         # avoiding relative paths, they might cause issues
         if ('./' in keep_file or '.\\' in keep_file): 
             keep_file = input("Please use the absolute path:\n") 
         elif os.path.isdir(keep_file):
             keep_file = input("That is directory, not a file:\n") 
-        else: 
-            keep_file = input("Keep Cache not found, please try again:\n") 
+        elif not os.path.exists(keep_file): 
+            keep_file = input("Keep Cache not found, please try again:\n")
+        else:
+            use_cache = yes_or_no("File found. Warning: if this is not already a Google Keep cache, this file will be overwritten and its contents will be lost.\nAre you sure you want to use this file as a Google Keep cache?", default_answer="no") == "yes"
+            if use_cache:
+                return
+            else:
+                print("Please enter path to cache file (or leave empty to ", end = '')
+                if KEEP_FILE:
+                    print("keep current cache): ")
+                else:
+                    print("skip): ")
+                keep_file = input()
         if keep_file:
             if keep_file[0] == '"':
                 keep_file = keep_file[1:]
