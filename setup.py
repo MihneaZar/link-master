@@ -145,7 +145,7 @@ def setup(from_link_list=True):
         if ('./' in keep_file or '.\\' in keep_file): 
             keep_file = input("Please use the absolute path:\n") 
         elif os.path.isdir(keep_file):
-            keep_file = input("That is directory, not a file:\n") 
+            keep_file = input("That is a directory, not a file:\n") 
         elif not os.path.exists(keep_file): 
             keep_file = input("Keep Cache not found, please try again:\n")
         else:
@@ -170,7 +170,6 @@ def setup(from_link_list=True):
 
     open(f'{HOMEPATH}/.paths', 'w').write(f'{CONSOLE_PATH}\n{KEEP_TOKEN}\n{KEEP_FILE}\n')
 
-    print()
     try_upload = yes_or_no("Would you like to do a test upload (also creates the Keep Cache, which is slower on the first upload)?") == "yes"
 
     if try_upload:
