@@ -7,13 +7,13 @@ sys.stderr = open(f'{HOMEPATH}/errors.txt', "a")
 CONSOLE_PATH_ERROR = "Path to ConsoleListInterface.py is broken."
 
 def setup(from_link_list=True):
-    if not os.path.exists(f'{HOMEPATH}/json_data'):
+    if not os.path.isdir(f'{HOMEPATH}/json_data'):
         os.mkdir(f'{HOMEPATH}/json_data')
-        if os.path.exists(f'{HOMEPATH}/Examples.json'):
+        if os.path.isfile(f'{HOMEPATH}/Examples.json'):
             os.rename(f'{HOMEPATH}/Examples.json', f'{HOMEPATH}/json_data/Examples.json')
 
     paths = []
-    if os.path.exists(f'{HOMEPATH}/.paths'):
+    if os.path.isfile(f'{HOMEPATH}/.paths'):
         paths = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
         
     paths += [""] * (3 - len(paths)) # adding empty strings so that the following commands wont raise an error
@@ -22,7 +22,7 @@ def setup(from_link_list=True):
     KEEP_TOKEN   = paths[1]
     KEEP_FILE    = paths[2]
 
-    if CONSOLE_PATH and not CONSOLE_PATH.isspace() and not os.path.exists(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
+    if CONSOLE_PATH and not CONSOLE_PATH.isspace() and not os.path.isfile(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
         if from_link_list:
             CONSOLE_PATH = ""
         else:
@@ -42,7 +42,7 @@ def setup(from_link_list=True):
     while True: 
         try:
             console_path = get_path(input(), check_dir=True)
-            accepted = os.path.exists(f'{console_path}/ConsoleListInterface.py')
+            accepted = os.path.isfile(f'{console_path}/ConsoleListInterface.py')
         except Exception as e:
             console_path = ""
             accepted = str(e) in ["empty", "space"]

@@ -3,12 +3,12 @@ from setup import setup
 from shared import *
 import os
 
-if not os.path.exists(f'{HOMEPATH}/.paths') or not os.path.isdir(f'{HOMEPATH}/json_data'):
+if not os.path.isfile(f'{HOMEPATH}/.paths') or not os.path.isdir(f'{HOMEPATH}/json_data'):
     setup()
 
 CONSOLE_PATH = open(f'{HOMEPATH}/.paths').readline().replace('\n', '')
 
-if not os.path.exists(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
+if not os.path.isfile(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
     print("Path to 'ConsoleListInterface.py' is broken, runnning setup again.")
     setup()
     CONSOLE_PATH = open(f'{HOMEPATH}/.paths').readline()
@@ -571,7 +571,7 @@ def json_file_loop(console, saved_pos=0):
                     continue
 
                 # ignoring command if file already exists
-                if os.path.exists(f'{JSONFOLDER}{filename}.json'):
+                if os.path.isfile(f'{JSONFOLDER}{filename}.json'):
                     console.separateInteraction(message="Link list with this name already exists.\n")
                     continue
 
@@ -609,7 +609,7 @@ def json_file_loop(console, saved_pos=0):
                     continue
 
                 # ignoring command if file already exists
-                if os.path.exists(f'{JSONFOLDER}{filename}.json'):
+                if os.path.isfile(f'{JSONFOLDER}{filename}.json'):
                     console.separateInteraction(message="Link list with this name already exists.\n")
                     continue
                 
