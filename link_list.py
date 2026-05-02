@@ -182,7 +182,7 @@ def link_list_loop(console, json_file_path, saved_pos):
     if not json_file_path:
         return
     
-    console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n\n')
+    console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n')
     
     json_data = json.load(open(json_file_path))
 
@@ -365,10 +365,10 @@ def link_list_loop(console, json_file_path, saved_pos):
 
             entry = json_data[DATA][curr_pos]
 
-            console.setTopText(f"Moving '{entry[DESC]}'\n\n")
+            console.setTopText(f"Moving '{entry[DESC]}'\n")
             move_file_path, _ = json_file_loop(console, saved_pos)
             if not move_file_path or json_file_path == move_file_path:
-                console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n\n')
+                console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n')
                 console.updateList(json_data[DESCRIPTIONS])
                 console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
                 console.updatePos(curr_pos)
@@ -390,7 +390,7 @@ def link_list_loop(console, json_file_path, saved_pos):
             with open(json_file_path, 'w', encoding='utf-8') as file:
                 json.dump(json_data, file, ensure_ascii=False, indent=4)
 
-            console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n\n')
+            console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n')
 
             console.updateList(json_data[DESCRIPTIONS])
             console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
@@ -406,11 +406,11 @@ def link_list_loop(console, json_file_path, saved_pos):
 
             entry = json_data[DATA][curr_pos]
 
-            console.setTopText(f"Copying '{entry[DESC]}'\n\n")
+            console.setTopText(f"Copying '{entry[DESC]}'\n")
 
             copy_file_path, _ = json_file_loop(console, saved_pos)
             if not copy_file_path:
-                console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n\n')
+                console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n')
                 console.updateList(json_data[DESCRIPTIONS])
                 console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
                 console.updatePos(curr_pos)
@@ -424,7 +424,7 @@ def link_list_loop(console, json_file_path, saved_pos):
                 with open(json_file_path, 'w', encoding='utf-8') as file:
                     json.dump(json_data, file, ensure_ascii=False, indent=4)
                 
-                console.setTopText('json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]\n\n')
+                console.setTopText('json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]\n')
 
                 console.updateList(json_data[DESCRIPTIONS])
 
@@ -439,7 +439,7 @@ def link_list_loop(console, json_file_path, saved_pos):
             with open(copy_file_path, 'w', encoding='utf-8') as file:
                 json.dump(copy_data, file, ensure_ascii=False, indent=4)
 
-            console.setTopText(f'json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]\n\n')
+            console.setTopText(f'json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]\n')
             
             console.updateList(json_data[DESCRIPTIONS])
             console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
@@ -729,7 +729,7 @@ def main():
         console.upload    = False # determines whether the app will automatically start gkeep_upload on quit (Esc) 
         console.setTitle("Link Master")
         while (True):
-            console.setTopText("Main Menu\n\n")
+            console.setTopText("Main Menu\n")
             json_file_path, saved_pos = json_file_loop(console, saved_pos)
             link_list_loop(console, json_file_path, saved_pos)
 
