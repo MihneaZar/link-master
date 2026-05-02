@@ -4,9 +4,7 @@ The main page contains the list of Link Lists (e.g. one list could be with entri
 A Link List page contains multiple entries. An entry has a description (e.g. 'Dictionaries'), a Yes/No value for opening in Google Incognito, and a list of links.
 
 ## Requirements
-- The [ConsoleListInterface](https://github.com/MihneaZar/ConsoleListInterface/) class for the console interface;
-- The [python-readchar](https://pypi.org/project/readchar/) library for reading keystrokes;
-- The [cursor](https://pypi.org/project/cursor/) library for hiding the cursor in console;
+- The [ConsoleListInterface](https://github.com/MihneaZar/ConsoleListInterface/) library for the console interface;
 - The [Requests](https://pypi.org/project/requests/) library for downloading website reponses directly;
 - The [Send2Trash](https://pypi.org/project/Send2Trash/) library for sending files to trash/recycle bin;
 - (Optional) The [gpsoauth](https://github.com/simon-weber/gpsoauth) library for obtaining the Google Master Token, needed for uploading to Google Keep;
