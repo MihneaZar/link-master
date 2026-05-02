@@ -1,11 +1,16 @@
 from shared import HOMEPATH, KEEP_EMAIL, get_path, yes_or_no, gkeep_upload, waitForEnter
 import os 
 
+try:
+    gpsoauth_import = True
+    import gpsoauth
+except:
+    gpsoauth_import = False
+
 def keep_setup(from_link_list=True):
     paths = []
     if os.path.isfile(f'{HOMEPATH}/.paths'):
         paths = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
-        print()
     elif from_link_list:
         if yes_or_no("\nAre you interested in running the setup to be able to upload link lists to Google Keep?", default_answer="no") == "no":
             # opening .paths file to ignore keep setup on future runs of link_list.py
@@ -17,14 +22,15 @@ def keep_setup(from_link_list=True):
     KEEP_TOKEN = paths[0]
     KEEP_FILE  = paths[1]
 
-    print("The following is for saving Link Lists to Google Keep. \
+    print("\nThe following is for saving Link Lists to Google Keep. \
           \nFor this, a Master Token is required. \
-          \nAdditional details are in README.md.\n")
+          \nAdditional details are in the README.md.\n")
     
     if KEEP_TOKEN:
         print("There is a saved Master Token, but you can change it now.")
-
-    direct_token = (yes_or_no("Do you already have a Master Token?", default_answer="no") == "yes")
+        direct_token = (yes_or_no("Do you want to change it directly?", default_answer="no") == "yes")
+    else:
+        direct_token = (yes_or_no("Do you already have a Master Token?", default_answer="no") == "yes")
 
     if direct_token:
         print("Please enter Google Master Token (or leave empty to ", end = '')
@@ -38,8 +44,7 @@ def keep_setup(from_link_list=True):
             KEEP_TOKEN = keep_token
     
     else:
-        try:
-            import gpsoauth
+        if gpsoauth_import:
             print("To obtain a Google Access Token, follow the instructions at: \
                   \nhttps://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token. \
                   \nThen please enter Google Access Token (or leave empty to ", end = '')
@@ -63,7 +68,7 @@ def keep_setup(from_link_list=True):
                         access_token = input("Authentification failed, try again, or leave this field empty to skip:\n")
                 else:
                     break
-        except:
+        else:
             print("'gpsoauth' library missing. \
                   \nInstall library in order to obtain Google Master Token with an Access Token. \
                   \nHowever, Link Master can be used without this feature.")
