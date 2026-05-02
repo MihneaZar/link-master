@@ -1,23 +1,23 @@
 from shared import HOMEPATH, KEEP_EMAIL, get_path, yes_or_no, gkeep_upload, waitForEnter
-import sys
 import os 
 
-def setup(from_link_list=True):
-    if not os.path.isdir(f'{HOMEPATH}/json_data'):
-        os.mkdir(f'{HOMEPATH}/json_data')
-        if os.path.isfile(f'{HOMEPATH}/Examples.json'):
-            os.rename(f'{HOMEPATH}/Examples.json', f'{HOMEPATH}/json_data/Examples.json')
-
+def keep_setup(from_link_list=True):
     paths = []
     if os.path.isfile(f'{HOMEPATH}/.paths'):
         paths = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
+        print()
+    elif from_link_list:
+        if yes_or_no("\nAre you interested in running the setup to be able to upload link lists to Google Keep?", default_answer="no") == "no":
+            # opening .paths file to ignore keep setup on future runs of link_list.py
+            open(f'{HOMEPATH}/.paths', 'w').close()
+            return
         
     paths += [""] * (2 - len(paths)) # adding empty strings so that the following commands wont raise an error
 
-    KEEP_TOKEN   = paths[0]
-    KEEP_FILE    = paths[1]
+    KEEP_TOKEN = paths[0]
+    KEEP_FILE  = paths[1]
 
-    print("\nThe following is for saving Link Lists to Google Keep. \
+    print("The following is for saving Link Lists to Google Keep. \
           \nFor this, a Master Token is required. \
           \nAdditional details are in README.md.\n")
     
@@ -25,7 +25,6 @@ def setup(from_link_list=True):
         print("There is a saved Master Token, but you can change it now.")
 
     direct_token = (yes_or_no("Do you already have a Master Token?", default_answer="no") == "yes")
-    # print()
 
     if direct_token:
         print("Please enter Google Master Token (or leave empty to ", end = '')
@@ -95,7 +94,13 @@ def setup(from_link_list=True):
             if result == "good path":
                 if yes_or_no("File found.\nWarning: if this is not already a Google Keep cache, this file will be overwritten and its contents will be lost.\nAre you sure you want to use this file as a Google Keep cache?", default_answer="no") == "yes":
                     break
+                print("Please enter path to cache file (or leave empty to ", end = '')
+                if KEEP_FILE:
+                    print("keep current cache): ")
+                else:
+                    print("skip): ")
             elif result in ["empty", "space"]:
+                print()
                 break
             elif result == "not file":
                 print("That is not a file, please try again:")
@@ -132,4 +137,4 @@ def setup(from_link_list=True):
 
 
 if __name__ == "__main__":
-    setup(False)
+    keep_setup(False)

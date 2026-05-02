@@ -1,5 +1,6 @@
 from ConsoleListInterface.Interface import ConsoleListInterface 
 from send2trash import send2trash
+from keep_setup import keep_setup
 from shared import *
 import subprocess
 import requests
@@ -10,6 +11,17 @@ sys.stderr = open(f'{HOMEPATH}/errors.txt', "a")
 LINK_INPUT_START = '\\{'
 LINK_INPUT_END   = '\\}'
 
+
+# creating json_data folder
+if not os.path.isdir(f'{HOMEPATH}/json_data'):
+    os.mkdir(f'{HOMEPATH}/json_data')
+    if os.path.isfile(f'{HOMEPATH}/Examples.json'):
+        os.rename(f'{HOMEPATH}/Examples.json', f'{HOMEPATH}/json_data/Examples.json')
+
+# running keep setup if the .paths file doesn't exist
+if not os.path.isfile(f'{HOMEPATH}/.paths'):
+    keep_setup()
+    
 
 def print_entry_details(entry):
     print_entry  = f'Description: {entry[DESC]}\n'

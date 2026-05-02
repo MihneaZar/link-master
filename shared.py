@@ -85,8 +85,8 @@ def gkeep_upload(press_enter=True):
     paths = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
     paths += [""] * (2 - len(paths)) # adding empty strings so that the following commands wont raise an error
 
-    KEEP_TOKEN   = paths[0]
-    KEEP_FILE    = paths[1]
+    KEEP_TOKEN = paths[0]
+    KEEP_FILE  = paths[1] if paths[1] else f'{HOMEPATH}/.keep.json'
 
     import gkeepapi
 
@@ -95,7 +95,7 @@ def gkeep_upload(press_enter=True):
     keep = gkeepapi.Keep()
 
     print("Downloading newest versions of notes...")
-    if os.path.exists(KEEP_FILE):
+    if os.path.isfile(KEEP_FILE):
         keep.authenticate(KEEP_EMAIL, KEEP_TOKEN, state=json.load(open(KEEP_FILE)))
     else:
         keep.authenticate(KEEP_EMAIL, KEEP_TOKEN)
