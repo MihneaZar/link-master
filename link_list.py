@@ -182,13 +182,12 @@ def link_list_loop(console, json_file_path, saved_pos):
     if not json_file_path:
         return
     
-    os.system(f'title {json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]} - Link Master')
-
+    console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n\n')
+    
     json_data = json.load(open(json_file_path))
 
     console.updateList(json_data[DESCRIPTIONS])
-    console.updateSpecialCommands(LINK_COMMANDS_LIST)
-    console.updateHelpPage(LINK_HELP_PAGE)
+    console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
     console.updatePos(0)
 
     while (True):
@@ -366,13 +365,12 @@ def link_list_loop(console, json_file_path, saved_pos):
 
             entry = json_data[DATA][curr_pos]
 
-            os.system(f'title Moving \'{entry[DESC]}\'')
+            console.setTopText(f"Moving '{entry[DESC]}'\n\n")
             move_file_path, _ = json_file_loop(console, saved_pos)
             if not move_file_path or json_file_path == move_file_path:
-                os.system(f'title {json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]} - Link Master')
+                console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n\n')
                 console.updateList(json_data[DESCRIPTIONS])
-                console.updateSpecialCommands(LINK_COMMANDS_LIST)
-                console.updateHelpPage(LINK_HELP_PAGE)
+                console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
                 console.updatePos(curr_pos)
                 continue
 
@@ -392,11 +390,10 @@ def link_list_loop(console, json_file_path, saved_pos):
             with open(json_file_path, 'w', encoding='utf-8') as file:
                 json.dump(json_data, file, ensure_ascii=False, indent=4)
 
-            os.system(f'title {json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]} - Link Master')
+            console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n\n')
 
             console.updateList(json_data[DESCRIPTIONS])
-            console.updateSpecialCommands(LINK_COMMANDS_LIST)
-            console.updateHelpPage(LINK_HELP_PAGE)
+            console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
             console.updatePos(curr_pos)
 
             continue
@@ -409,13 +406,13 @@ def link_list_loop(console, json_file_path, saved_pos):
 
             entry = json_data[DATA][curr_pos]
 
-            os.system(f'title Copying \'{entry[DESC]}\'')
+            console.setTopText(f"Copying '{entry[DESC]}'\n\n")
+
             copy_file_path, _ = json_file_loop(console, saved_pos)
             if not copy_file_path:
-                os.system(f'title {json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]} - Link Master')
+                console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n\n')
                 console.updateList(json_data[DESCRIPTIONS])
-                console.updateSpecialCommands(LINK_COMMANDS_LIST)
-                console.updateHelpPage(LINK_HELP_PAGE)
+                console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
                 console.updatePos(curr_pos)
                 continue
 
@@ -427,7 +424,7 @@ def link_list_loop(console, json_file_path, saved_pos):
                 with open(json_file_path, 'w', encoding='utf-8') as file:
                     json.dump(json_data, file, ensure_ascii=False, indent=4)
                 
-                os.system(f'title {json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]} - Link Master')
+                console.setTopText('json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]\n\n')
 
                 console.updateList(json_data[DESCRIPTIONS])
 
@@ -442,11 +439,10 @@ def link_list_loop(console, json_file_path, saved_pos):
             with open(copy_file_path, 'w', encoding='utf-8') as file:
                 json.dump(copy_data, file, ensure_ascii=False, indent=4)
 
-            os.system(f'title {json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]} - Link Master')
+            console.setTopText(f'json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]\n\n')
             
             console.updateList(json_data[DESCRIPTIONS])
-            console.updateSpecialCommands(LINK_COMMANDS_LIST)
-            console.updateHelpPage(LINK_HELP_PAGE)
+            console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
             console.updatePos(curr_pos)
 
             continue
@@ -541,8 +537,7 @@ def json_file_loop(console, saved_pos=0):
     files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
     console.updateList(files)
-    console.updateSpecialCommands(FILE_COMMANDS_LIST)
-    console.updateHelpPage(FILE_HELP_PAGE)
+    console.configure(specialCommands=FILE_COMMANDS_LIST, helpPage=FILE_HELP_PAGE)
     console.updatePos(saved_pos)
     
     while (True):
@@ -732,8 +727,9 @@ def main():
         console = ConsoleListInterface()
         console.hideFiles = True  # hidden files
         console.upload    = False # determines whether the app will automatically start gkeep_upload on quit (Esc) 
+        console.setTitle("Link Master")
         while (True):
-            os.system("title Link Master Menu")
+            console.setTopText("Main Menu\n\n")
             json_file_path, saved_pos = json_file_loop(console, saved_pos)
             link_list_loop(console, json_file_path, saved_pos)
 
