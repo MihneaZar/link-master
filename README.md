@@ -54,3 +54,7 @@ The order does not matter, since the variables are first resolved, then the link
 Additional Notes:
 - entering '?' when inputting links will provide instructions for the formatting of input-able links, and useful commands for removing existing links whilst editting;
 - the slightly confusing '\\{input_prompt\\}' format is used so it does not interfere with valid characters in links (including, potentially, '{' and '}').
+
+-------------------------------------------------------------------------
+
+*Copyright (c) 2026 Mihnea Bogdan Zarojanu*
