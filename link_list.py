@@ -1,22 +1,6 @@
-from readchar import key
-from setup import setup
-from shared import *
-import os
-
-if not os.path.isfile(f'{HOMEPATH}/.paths') or not os.path.isdir(f'{HOMEPATH}/json_data'):
-    setup()
-
-CONSOLE_PATH = open(f'{HOMEPATH}/.paths').readline().replace('\n', '')
-
-if not os.path.isfile(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
-    print("Path to 'ConsoleListInterface.py' is broken, runnning setup again.")
-    setup()
-    CONSOLE_PATH = open(f'{HOMEPATH}/.paths').readline()
-
-sys.path.append(CONSOLE_PATH)
-
-from ConsoleListInterface import ConsoleListInterface # pyright: ignore[reportMissingImports]
+from ConsoleListInterface.Interface import ConsoleListInterface 
 from send2trash import send2trash
+from shared import *
 import subprocess
 import requests
 
