@@ -5,6 +5,12 @@ import json
 import sys
 import os
 
+try:
+    gkeepapi_imported = True
+    import gkeepapi
+except:
+    gkeepapi_imported = False
+
 HOMEPATH = os.path.dirname(os.path.realpath(__file__)) 
 
 sys.stderr = open(f'{HOMEPATH}/errors.txt', "a")
@@ -82,6 +88,9 @@ def yes_or_no(question, default_answer="yes", other_options=[], newline=True):
 
 
 def gkeep_upload(press_enter=True):
+    if not gkeepapi_imported:
+        raise ModuleNotFoundError
+
     paths = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
     paths += [""] * (2 - len(paths)) # adding empty strings so that the following commands wont raise an error
 

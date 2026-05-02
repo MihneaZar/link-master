@@ -131,7 +131,6 @@ def keep_setup(from_link_list=True):
             print()
 
         if from_link_list:
-
             print("Press enter to continue.")
             waitForEnter()
 
