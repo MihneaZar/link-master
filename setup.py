@@ -1,10 +1,6 @@
-from shared import HOMEPATH, KEEP_EMAIL, get_path, yes_or_no, gkeep_upload
+from shared import HOMEPATH, KEEP_EMAIL, get_path, yes_or_no, gkeep_upload, waitForEnter
 import sys
 import os 
-
-sys.stderr = open(f'{HOMEPATH}/errors.txt', "a")
-
-CONSOLE_PATH_ERROR = "Path to ConsoleListInterface.py is broken."
 
 def setup(from_link_list=True):
     if not os.path.isdir(f'{HOMEPATH}/json_data'):
@@ -16,48 +12,10 @@ def setup(from_link_list=True):
     if os.path.isfile(f'{HOMEPATH}/.paths'):
         paths = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
         
-    paths += [""] * (3 - len(paths)) # adding empty strings so that the following commands wont raise an error
+    paths += [""] * (2 - len(paths)) # adding empty strings so that the following commands wont raise an error
 
-    CONSOLE_PATH = paths[0]
-    KEEP_TOKEN   = paths[1]
-    KEEP_FILE    = paths[2]
-
-    if CONSOLE_PATH and not CONSOLE_PATH.isspace() and not os.path.isfile(f'{CONSOLE_PATH}/ConsoleListInterface.py'):
-        if from_link_list:
-            CONSOLE_PATH = ""
-        else:
-            CONSOLE_PATH = CONSOLE_PATH_ERROR
-
-    if CONSOLE_PATH and CONSOLE_PATH != CONSOLE_PATH_ERROR:
-        print(f"Current saved directory for 'ConsoleListInterface.py':\n{CONSOLE_PATH}")
-    if CONSOLE_PATH == CONSOLE_PATH_ERROR:
-        print(CONSOLE_PATH)
-        CONSOLE_PATH = ""
-    print("Please type path to directory of ConsoleListInterface.py (or leave empty to ", end = '')
-    if CONSOLE_PATH:
-        print("keep current path): ")
-    else:
-        print("cancel): ")
-
-    while True: 
-        try:
-            console_path = get_path(input(), check_dir=True)
-            accepted = os.path.isfile(f'{console_path}/ConsoleListInterface.py')
-        except Exception as e:
-            console_path = ""
-            accepted = str(e) in ["empty", "space"]
-        finally:
-            if accepted:
-                break
-            else:
-                print("ConsoleListInterface.py not found, please try again:")
-
-    if console_path: 
-        CONSOLE_PATH = console_path
-
-    if not CONSOLE_PATH:
-        print("Path to ConsoleListInterface.py not provided, setup is aborted.\n")
-        exit()
+    KEEP_TOKEN   = paths[0]
+    KEEP_FILE    = paths[1]
 
     print("\nThe following is for saving Link Lists to Google Keep. \
           \nFor this, a Master Token is required. \
@@ -113,7 +71,7 @@ def setup(from_link_list=True):
 
     if not KEEP_TOKEN:
         print("Master Token missing.\nFinishing setup.\n")
-        open(f'{HOMEPATH}/.paths', 'w').write(f'{CONSOLE_PATH}\n{KEEP_TOKEN}\n{KEEP_FILE}\n')
+        open(f'{HOMEPATH}/.paths', 'w').write(f'{KEEP_TOKEN}\n{KEEP_FILE}\n')
         return
 
     print()
@@ -134,24 +92,20 @@ def setup(from_link_list=True):
             keep_file = ""
             result    = str(e) 
         finally:
-            if result == "good path" and yes_or_no("File found.\nWarning: if this is not already a Google Keep cache, this file will be overwritten and its contents will be lost.\nAre you sure you want to use this file as a Google Keep cache?", default_answer="no") == "yes":
+            if result == "good path":
+                if yes_or_no("File found.\nWarning: if this is not already a Google Keep cache, this file will be overwritten and its contents will be lost.\nAre you sure you want to use this file as a Google Keep cache?", default_answer="no") == "yes":
+                    break
+            elif result in ["empty", "space"]:
                 break
-            else:
-                if result == "not file":
-                    print("That is a directory, not a file:")
-                elif result == "not exists":
-                    print("Keep Cache not found, please try again:")
-                else: 
-                    print("Please enter path to cache file (or leave empty to ", end = '')
-                    if KEEP_FILE:
-                        print("keep current cache): ")
-                    else:
-                        print("skip): ")
+            elif result == "not file":
+                print("That is not a file, please try again:")
+            elif result == "not exists":
+                print("Keep Cache not found, please try again:")
 
-    if keep_file:
+    if keep_file and not keep_file.isspace():
         KEEP_FILE = keep_file
 
-    open(f'{HOMEPATH}/.paths', 'w').write(f'{CONSOLE_PATH}\n{KEEP_TOKEN}\n{KEEP_FILE}\n')
+    open(f'{HOMEPATH}/.paths', 'w').write(f'{KEEP_TOKEN}\n{KEEP_FILE}\n')
 
     try_upload = yes_or_no("Would you like to do a test upload (also creates the Keep Cache, which is slower on the first upload)?") == "yes"
 
@@ -166,14 +120,12 @@ def setup(from_link_list=True):
                 print("The 'gkeepapi' library is missing.\nPlease install it with 'pip3 install gkeepapi' to be able to upload the link lists to Google Keep.")
             elif type(e).__name__ == 'FileNotFoundError' or type(e).__name__ == 'OSError':
                 print("The cache file path is broken.\nThis path will be removed, but you can change it back to an existing file by rerunning this setup.")
-                open(f'{HOMEPATH}/.paths', 'w').write(f'{CONSOLE_PATH}\n{KEEP_TOKEN}\n\n')
+                open(f'{HOMEPATH}/.paths', 'w').write(f'{KEEP_TOKEN}\n\n')
             else:
                 print("Unknown error type.")
             print()
 
         if from_link_list:
-            sys.path.append(CONSOLE_PATH)
-            from ConsoleListInterface import waitForEnter # pyright: ignore[reportMissingImports]
 
             print("Press enter to continue.")
             waitForEnter()

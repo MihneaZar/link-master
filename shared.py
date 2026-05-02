@@ -1,3 +1,4 @@
+from ConsoleListInterface.Interface import waitForEnter 
 from readchar import readkey, key
 from functools import reduce
 import json
@@ -82,15 +83,11 @@ def yes_or_no(question, default_answer="yes", other_options=[], newline=True):
 
 def gkeep_upload(press_enter=True):
     paths = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
-    paths += [""] * (3 - len(paths)) # adding empty strings so that the following commands wont raise an error
+    paths += [""] * (2 - len(paths)) # adding empty strings so that the following commands wont raise an error
 
-    CONSOLE_PATH = paths[0]
-    KEEP_TOKEN   = paths[1]
-    KEEP_FILE    = paths[2]
-    
-    sys.path.append(CONSOLE_PATH)
+    KEEP_TOKEN   = paths[0]
+    KEEP_FILE    = paths[1]
 
-    from ConsoleListInterface import waitForEnter # pyright: ignore[reportMissingImports]
     import gkeepapi
 
     print("Starting Google Keep upload...")
