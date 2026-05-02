@@ -1,4 +1,4 @@
-from ConsoleListInterface.Interface import ConsoleListInterface 
+from ConsoleListInterface import ConsoleListInterface 
 from send2trash import send2trash
 from keep_setup import keep_setup
 from shared import *

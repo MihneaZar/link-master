@@ -1,4 +1,4 @@
-from ConsoleListInterface.Interface import waitForEnter 
+from ConsoleListInterface import waitForEnter 
 from readchar import readkey, key
 from functools import reduce
 import json
