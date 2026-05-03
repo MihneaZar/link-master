@@ -8,18 +8,8 @@ A Link List page contains multiple entries. An entry has a description (e.g. 'Di
 - The [Requests](https://pypi.org/project/requests/) library for downloading website reponses directly;
 - The [Send2Trash](https://pypi.org/project/Send2Trash/) library for sending files to trash/recycle bin;
 - (Optional) The [gpsoauth](https://github.com/simon-weber/gpsoauth) library for obtaining the Google Master Token, needed for uploading to Google Keep;
-- (Optional) The [gkeepapi](https://github.com/kiwiz/gkeepapi) library for actually uploading notes to Google Keep.
-
-## Setup
-The setup() function from [setup.py](setup.py) will be run automatically on the first 'link_master.py' launch.
-On top of creating the 'json_data' folder (where the app data is stored), it will prompt the user for three things:
-- (required) path to the folder where 'ConsoleListInterface.py' is located;
-- (optional) Gmail Address;
-- (optional) Google Master Token;
-- (optional) Google Keep Cache filepath.
-
-The last three are for the functionality of saving to Google Keep, and are explained in the 'Google Keep' section. <br>
-The setup function can be rerun with 'python3 setup.py' to change any of the three fields.
+- (Optional) The [gkeepapi](https://github.com/kiwiz/gkeepapi) library for actually uploading notes to Google Keep;
+- (Optional) The [termcolor](https://pypi.org/project/termcolor/) library for colored text (only needed for the Google Keep setup program).
 
 ## Additional Information
 The program opens the links in Google Chrome / Google Incognito. <br>
@@ -29,14 +19,16 @@ Only tested on Windows 11.
 ## Google Keep
 As an additional functionality, the program can save the Link Lists to Google Keep. <br>
 For this, it requires a Google Master Token. <br>
-The setup function requires a Google Access Token to obtain the Google Master Token. <br>
-The explanation of how to acquire a Google Access Token is [here](https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token). <br>
+To obtain Google Master Token, a Google Access Token is required, and the explanation of how to get one is [here](https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token). <br>
+If you already have your account's Google Master Token, you can save it directly through the setup. <br>
+Simply run 'python3 keep_setup.py', and it will provide some additional information. <br> <br>
 !! Important Notes:
 - as the name suggests, the Master Token grants access to your **entire Google account**. Therefore, protect it with your life, and never share it or publish it online;
-- the app saves the Master Token in a file named '.paths' in the same folder as [link_list.py](link_list.py). The Master Token is required for Google Keep uploads, but this feature is completely optional;
+- the app saves the Master Token only locally, in a file named '.paths' in the [metadata](metadata) folder. The Master Token is required for Google Keep uploads, but this feature is completely optional;
 - the program saves the link lists as separate Keep Notes under the label 'Link Master'. Do not add this label to any other notes, since the program deletes all previous notes labeled 'Link Master' before uploading the new Link Lists. <br>
 
-Additionally, if the path of an existing file is provided in the 'Google Keep Cache File' part of the setup, the program will save the Google Keep cache there (can be useful for a cache shared between programs). Otherwise, it will save it in the program folder as  'keep_state.json'.
+Additionally, the path to a JSON Google Keep cache file can be provided through the setup, which the program will use to cache the Google Keep notes. This can be useful for a cache shared between programs. <br>
+Otherwise, it will save it in the [metadata](metadata) folder as '.keep.json'.
 
 ## Example Entries
 By default, the 'json_data' folder contains an 'Examples.json' file with a few the following examples for link formatting (ctrl+d shows the details of link entries): <br>
