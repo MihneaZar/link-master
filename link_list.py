@@ -5,7 +5,7 @@ from shared import *
 import subprocess
 import requests
 
-sys.stderr = open(f'{HOMEPATH}/errors.txt', "a")
+sys.stderr = open(f'{DATAPATH}/errors.txt', "a")
 
 # for custom input in the link, such as show season and episode
 LINK_INPUT_START = '\\{'
@@ -19,7 +19,7 @@ if not os.path.isdir(f'{HOMEPATH}/json_data'):
         os.rename(f'{HOMEPATH}/Examples.json', f'{HOMEPATH}/json_data/Examples.json')
 
 # running keep setup if the .paths file doesn't exist
-if not os.path.isfile(f'{HOMEPATH}/.paths'):
+if not os.path.isfile(f'{DATAPATH}/.paths'):
     keep_setup()
     
 

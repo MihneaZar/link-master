@@ -11,11 +11,11 @@ try:
 except:
     gkeepapi_imported = False
 
-HOMEPATH = os.path.dirname(os.path.realpath(__file__)) 
-
-sys.stderr = open(f'{HOMEPATH}/errors.txt', "a")
-
+HOMEPATH   = os.path.dirname(os.path.realpath(__file__)) 
+DATAPATH   = f"{HOMEPATH}/metadata"
 JSONFOLDER = f'{HOMEPATH}/json_data/'
+
+sys.stderr = open(f'{DATAPATH}/errors.txt', "a")
 
 FILENAME     = "Filename"
 DATA         = "Data"
