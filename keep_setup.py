@@ -1,5 +1,5 @@
 from ConsoleListInterface import MenuInterface, waitForEnter, cls
-from link_list import DATAPATH, KEEP_EMAIL, gkeep_upload
+from link_master import DATAPATH, KEEP_EMAIL, gkeep_upload
 from termcolor import colored
 import yaml
 import sys
@@ -27,7 +27,7 @@ Additionally, if you use multiple programs that access your Google Keep through 
 Important Note: this program saves your sensitive Master Token only on your computer, in the 'metadata/.paths' file.
 """
 
-ACCESS_INSTRUCTIONS="""Follow the instructions at https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token.
+ACCESS_INSTRUCTIONS = """Follow the instructions at https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token.
 Then paste the Access Token here (or leave empty to cancel):
 """
 
