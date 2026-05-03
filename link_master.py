@@ -289,8 +289,8 @@ def parse_link(link, vars):
     
     return link
 
-
-LINK_COMMANDS_LIST = [key.ENTER, key.CTRL_O, key.CTRL_N, key.CTRL_D, key.CTRL_E, key.CTRL_X, key.CTRL_C, key.DELETE, key.CTRL_B, key.CTRL_K, key.BACKSPACE, key.ESC]
+                                                                               # overwriting internal rename command
+LINK_COMMANDS_LIST = [key.ENTER, key.CTRL_O, key.CTRL_N, key.CTRL_D, key.CTRL_E, key.CTRL_R, key.CTRL_X, key.CTRL_C, key.DELETE, key.CTRL_B, key.CTRL_K, key.BACKSPACE, key.ESC]
 LINK_HELP_PAGE    = f"""
 Link list page.
 
