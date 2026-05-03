@@ -13,7 +13,7 @@ except:
 
 HOMEPATH   = os.path.dirname(os.path.realpath(__file__)) 
 DATAPATH   = f"{HOMEPATH}/metadata"
-JSONFOLDER = f'{HOMEPATH}/json_data/'
+JSONFOLDER = f"{HOMEPATH}/json_data"
 
 sys.stderr = open(f'{DATAPATH}/errors.txt', "a")
 
@@ -91,11 +91,11 @@ def gkeep_upload(press_enter=True):
     if not gkeepapi_imported:
         raise ModuleNotFoundError
 
-    paths = [line.replace('\n', '') for line in open(f'{HOMEPATH}/.paths').readlines()]
+    paths = [line.replace('\n', '') for line in open(f'{DATAPATH}/.paths').readlines()]
     paths += [""] * (2 - len(paths)) # adding empty strings so that the following commands wont raise an error
 
     KEEP_TOKEN = paths[0]
-    KEEP_FILE  = paths[1] if paths[1] else f'{HOMEPATH}/.keep.json'
+    KEEP_FILE  = paths[1] if paths[1] else f'{DATAPATH}/.keep.json'
 
     import gkeepapi
 

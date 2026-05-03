@@ -1,26 +1,22 @@
 from ConsoleListInterface import ConsoleListInterface 
 from send2trash import send2trash
-from keep_setup import keep_setup
 from shared import *
 import subprocess
 import requests
+import shutil
+
 
 sys.stderr = open(f'{DATAPATH}/errors.txt', "a")
 
 # for custom input in the link, such as show season and episode
-LINK_INPUT_START = '\\{'
-LINK_INPUT_END   = '\\}'
+LINK_INPUT_START = '/{'
+LINK_INPUT_END   = '/}'
 
 
 # creating json_data folder
-if not os.path.isdir(f'{HOMEPATH}/json_data'):
-    os.mkdir(f'{HOMEPATH}/json_data')
-    if os.path.isfile(f'{HOMEPATH}/Examples.json'):
-        os.rename(f'{HOMEPATH}/Examples.json', f'{HOMEPATH}/json_data/Examples.json')
-
-# running keep setup if the .paths file doesn't exist
-if not os.path.isfile(f'{DATAPATH}/.paths'):
-    keep_setup()
+if not os.path.isdir(JSONFOLDER):
+    os.mkdir(JSONFOLDER)
+    shutil.copy(f'{DATAPATH}/Examples.json', f'{JSONFOLDER}/Examples.json')
     
 
 def print_entry_details(entry):
@@ -545,7 +541,7 @@ def json_file_loop(console, saved_pos=0):
 
         # open selected link list
         if command == key.ENTER:
-            return f'{JSONFOLDER}{files[curr_pos]}.json', curr_pos
+            return f'{JSONFOLDER}/{files[curr_pos]}.json', curr_pos
 
 
         # creating new link list
@@ -562,11 +558,11 @@ def json_file_loop(console, saved_pos=0):
                     continue
 
                 # ignoring command if file already exists
-                if os.path.isfile(f'{JSONFOLDER}{filename}.json'):
+                if os.path.isfile(f'{JSONFOLDER}/{filename}.json'):
                     console.separateInteraction(message="Link list with this name already exists.\n")
                     continue
 
-                with open(f'{JSONFOLDER}{filename}.json', 'w', encoding='utf-8') as file:
+                with open(f'{JSONFOLDER}/{filename}.json', 'w', encoding='utf-8') as file:
                     json.dump({FILENAME: filename, DESCRIPTIONS: [], DATA: []}, file, ensure_ascii=False, indent=4)
 
                 # if a hidden file was created, automatically show hidden files
@@ -600,17 +596,17 @@ def json_file_loop(console, saved_pos=0):
                     continue
 
                 # ignoring command if file already exists
-                if os.path.isfile(f'{JSONFOLDER}{filename}.json'):
+                if os.path.isfile(f'{JSONFOLDER}/{filename}.json'):
                     console.separateInteraction(message="Link list with this name already exists.\n")
                     continue
                 
-                os.rename(f'{JSONFOLDER}{file}.json', f'{JSONFOLDER}{filename}.json')
+                os.rename(f'{JSONFOLDER}/{file}.json', f'{JSONFOLDER}/{filename}.json')
 
                 # updating filename in json file
-                json_data = json.load(open(f'{JSONFOLDER}{filename}.json'))
+                json_data = json.load(open(f'{JSONFOLDER}/{filename}.json'))
                 json_data["Filename"] = filename
 
-                with open(f'{JSONFOLDER}{filename}.json', 'w', encoding='utf-8') as file:
+                with open(f'{JSONFOLDER}/{filename}.json', 'w', encoding='utf-8') as file:
                     json.dump(json_data, file, ensure_ascii=False, indent=4)
 
                 files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
@@ -630,7 +626,7 @@ def json_file_loop(console, saved_pos=0):
         if command == key.DELETE:
             try:
                 file = files[curr_pos]
-                send2trash(f'{JSONFOLDER}{file}.json'.replace('/', '\\')) # this function requires backslashes
+                send2trash(f'{JSONFOLDER}/{file}.json'.replace('/', '\\')) # this function requires backslashes
                 files.pop(curr_pos)
 
                 console.updateList(files)
