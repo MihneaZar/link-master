@@ -15,7 +15,7 @@ except:
 sys.stderr = open(f'{DATAPATH}/errors.txt', "a")
 
 
-FULL_EXPLANATION = """This is the setup for the optional feature of being able to save your links to Google Keep.
+FULL_EXPLANATION = """This is the setup for the optional feature of being able to save your link lists to Google Keep.
 For this, the program needs your account's Master Token - which provides full access to your Google account, through the APIs.
 Because of that, you need to be careful in handling it - just like you'd handle a password.
 
@@ -25,6 +25,9 @@ If you don't, you can use an Access Token - the explanation is provided when you
 Additionally, if you use multiple programs that access your Google Keep through the gkeepapi library, you can set up a special file to be the cache for it, and you can provide its path here through the fourth option.
 
 Important Note: this program saves your sensitive Master Token only on your computer, in the 'metadata/.paths' file.
+
+Another important note: once you set up this feature, and upload link lists to Google Keep, they will be under the label 'Link Master'.
+*Do not add this label to any of your other notes*, since, on every upload, the previous notes with the 'Link Master' label are deleted.
 """
 
 ACCESS_INSTRUCTIONS="""Follow the instructions at https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token.
