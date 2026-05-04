@@ -231,7 +231,7 @@ def edit_entry(entry):
     menu_structure = yaml.safe_load(open(f"{DATAPATH}/link_list_edit.yaml"))
     menu_structure["Edit"]["Remove links"] = {f'{i}.': None for i in range(1, len(entry[LINKS]) + 1)}
 
-    menu = MenuInterface(menu_structure, submenuColor="light_grey", optionColor="light_grey", supressColorWarning=True, dontPrintList=True)
+    menu = MenuInterface(menu_structure, submenuColor="light_grey", optionColor="light_grey", supressColorWarning=True, dontPrintMenu=True)
 
     cls()
 
