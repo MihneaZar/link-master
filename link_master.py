@@ -1,7 +1,6 @@
 from ConsoleListInterface import ConsoleListInterface, MenuInterface, cls
 from send2trash import send2trash
 from readchar import readkey, key
-from functools import reduce
 import subprocess
 import requests
 import shutil
