@@ -498,11 +498,6 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 continue
 
             description, incognito, links = console.separateInteraction(function=lambda: edit_entry(json_data[DATA][curr_pos]))
-
-            print(description)
-            print(incognito)
-            print(links)
-            input()
                 
             if description:
                 json_data[DESCRIPTIONS][curr_pos] = description
@@ -663,7 +658,6 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
         # quit application
         if command == key.ESC:
-            console.upload = True
             console.exitInterface()
 
             # uploading to google keep if changes to links haven't been uploaded
@@ -877,7 +871,6 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
 
         # quit application
         if command == key.ESC:
-            console.upload = True
             console.exitInterface()
             
             # uploading to google keep if changes to links haven't been uploaded
@@ -886,7 +879,6 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                     gkeep_upload(False)
                 except Exception as e:
                     # console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
-                    print("bad")
                     pass
             quit()
 
