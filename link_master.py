@@ -1,4 +1,4 @@
-from ConsoleListInterface import ConsoleListInterface, MenuInterface, cls
+from ConsoleListInterface import ConsoleListInterface, MenuInterface
 from send2trash import send2trash
 from readchar import readkey, key
 import subprocess
@@ -232,8 +232,6 @@ def edit_entry(entry):
     menu_structure["Edit"]["Remove links"] = {f'{i}.': None for i in range(1, len(entry[LINKS]) + 1)}
 
     menu = MenuInterface(menu_structure, submenuColor="light_grey", optionColor="light_grey", supressColorWarning=True, dontPrintMenu=True)
-
-    cls()
 
     description   = None
     incognito     = None
