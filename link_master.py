@@ -38,8 +38,8 @@ sys.stderr = open(f'{DATAPATH}/errors.txt', "a")
 LINK_INPUT_START = '\\{'
 LINK_INPUT_END   = '\\}'
 
-YES = YES
-NO = NO
+YES = "Yes"
+NO  = "No"
 
 # creating json_data folder
 if not os.path.isdir(JSONFOLDER):
@@ -51,7 +51,8 @@ def yes_or_no(question, default_answer=YES, newline=True):
         print(f'{question}\nY/N', flush=True)
     else: 
         print(f'{question} (Y/N): ', end='', flush=True)
-   default_answer = default_answer.capitalize()
+
+    default_answer = default_answer.capitalize()
     answer = readkey().lower()
     while not answer in ['y', 'n']:
         if answer == key.ENTER:
@@ -379,7 +380,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 continue
 
             entry  = json_data[DATA][curr_pos]
-            answer = entry[INCOGNITO].lower()
+            answer = entry[INCOGNITO]
 
             chrome_arg = "" if answer == NO else "-incognito"
 
@@ -414,7 +415,6 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 continue
 
             entry  = json_data[DATA][curr_pos]
-            answer = entry[INCOGNITO].lower()
             
             # resolving link variables
             vars = {}
