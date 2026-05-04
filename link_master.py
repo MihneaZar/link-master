@@ -44,40 +44,31 @@ if not os.path.isdir(JSONFOLDER):
     os.mkdir(JSONFOLDER)
     shutil.copy(f'{DATAPATH}/Examples.json', f'{JSONFOLDER}/Examples.json')
 
-def yes_or_no(question, default_answer="yes", other_options=[], newline=True):
-    options = ["yes", "no"] + list(map(lambda opt: opt.lower(), other_options))
-    list_other_options = list(filter(lambda opt: opt != "", other_options))
-    list_other_options = '/' + reduce(lambda o1, o2: o1+'/'+o2, list_other_options) if list_other_options else ""
+def yes_or_no(question, default_answer="Yes", newline=True):
     if newline:
-        print(f'{question}\nY/N{list_other_options}', flush=True)
+        print(f'{question}\nY/N', flush=True)
     else: 
-        print(f'{question} (Y/N{list_other_options}): ', end='', flush=True)
+        print(f'{question} (Y/N): ', end='', flush=True)
 
     answer = readkey().lower()
-    while not any(option.startswith(answer) for option in options):
+    while not answer in ['y', 'n']:
         if answer == key.ENTER:
-            if "" in options:
+            print(default_answer)
+            if newline:
                 print()
-                if newline:
-                    print()
-                return ""
-            else:
-                print(default_answer.capitalize())
-                if newline:
-                    print()
-                return default_answer
+            return default_answer
         
         answer = readkey().lower()
 
-    for option in options:
-        if option.startswith(answer):
-            print(option.capitalize())
-            if newline:
-                print()
-            return option
+    
+    answer = "Yes" if answer == 'y' else "No"
+    print(answer)
+    if newline:
+        print()
+        
+    return answer
 
-    return None
-
+    
 
 def gkeep_upload(press_enter=True):
     if not gkeepapi_imported:
@@ -231,7 +222,7 @@ def create_entry():
     if (not description or description.isspace()):
         return None, None, None
 
-    incognito = yes_or_no("Open in incognito mode", default_answer="no", newline=False).capitalize()
+    incognito = yes_or_no("Open in incognito mode", default_answer="No", newline=False)
 
     links = get_links()
 
@@ -264,11 +255,12 @@ def edit_entry(entry):
 
         if option == "Save":
             changed = (description or incognito or added_links or removed_links)
-            if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to save changes?", "no")) == "no":
-                continue
+            if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to save changes?", "No")) == "Yes":
+                all_links = entry[LINKS] + added_links
+                return description, incognito, [all_links[pos] for pos in range(len(all_links)) if (pos + 1) not in removed_links] 
             
-            all_links = entry[LINKS] + added_links
-            return description, incognito, [all_links[pos] for pos in range(len(all_links)) if (pos + 1) not in removed_links] 
+            continue
+            
 
 
         if option == "Change":
@@ -316,7 +308,7 @@ def edit_entry(entry):
 
         if option == "Cancel": 
             changed = (description or incognito or added_links or removed_links)
-            if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to cancel changes?", "no")) == "yes":
+            if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to cancel changes?", "No")) == "Yes":
                 return None, None, entry[LINKS]
 
 
@@ -366,7 +358,8 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
     if not json_file_path:
         return
     
-    console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n')
+    # console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
+    console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
     
     json_data = json.load(open(json_file_path))
 
@@ -545,7 +538,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             console.setTopText(f"Moving '{entry[DESC]}'\n")
             move_file_path, _ = json_file_loop(console, saved_pos)
             if not move_file_path or json_file_path == move_file_path:
-                console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n')
+                console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
                 console.updateList(json_data[DESCRIPTIONS])
                 console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
                 console.updatePos(curr_pos)
@@ -567,7 +560,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             with open(json_file_path, 'w', encoding='utf-8') as file:
                 json.dump(json_data, file, ensure_ascii=False, indent=4)
 
-            console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n')
+            console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
 
             console.updateList(json_data[DESCRIPTIONS])
             console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
@@ -587,7 +580,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
             copy_file_path, _ = json_file_loop(console, saved_pos)
             if not copy_file_path:
-                console.setTopText(f'{json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]}\n')
+                console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
                 console.updateList(json_data[DESCRIPTIONS])
                 console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
                 console.updatePos(curr_pos)
@@ -630,9 +623,9 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 console.separateInteraction(message="Link list is empty.\n")
                 continue
 
-            remove_answer = console.separateInteraction(function=lambda: yes_or_no(f'Are you sure you want to remove \'{json_data[DESCRIPTIONS][curr_pos]}\'?\nData will be lost forever.'), showCursor=True)
+            remove_answer = console.separateInteraction(function=lambda: yes_or_no(f'Are you sure you want to remove \'{json_data[DESCRIPTIONS][curr_pos]}\'?\nData will be lost forever.', default_answer="No"), showCursor=True)
 
-            if remove_answer == "no":
+            if remove_answer == "No":
                 continue
 
             json_data[DATA].pop(curr_pos)
@@ -687,7 +680,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 # IMPORTANT NOTE: CTRL_H is SAME as BACKSPACE
 FILE_COMMANDS_LIST = [key.ENTER, key.CTRL_N, key.CTRL_R, key.DELETE, key.CTRL_B, key.CTRL_U, key.CTRL_T, key.CTRL_K, key.BACKSPACE, key.ESC]
 FILE_HELP_PAGE    = """
-Link list main menu.
+Link Master main menu.
 
 Controls:
     - arrow keys -> moving between existing link lists.
@@ -846,7 +839,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
 
         if command == key.CTRL_T:
             if console.hideFiles:
-                console.hideFiles = (console.separateInteraction(function=lambda: yes_or_no("Show hidden lists?", default_answer="no"), showCursor=True) == "no")
+                console.hideFiles = (console.separateInteraction(function=lambda: yes_or_no("Show hidden lists?", default_answer="No"), showCursor=True) == "No")
                 if not console.hideFiles:
                     curr_file = files[curr_pos]
                     files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
