@@ -1,4 +1,4 @@
-from ConsoleListInterface import ConsoleListInterface, waitForEnter 
+from ConsoleListInterface import ConsoleListInterface, MenuInterface, waitForEnter, cls
 from send2trash import send2trash
 from readchar import readkey, key
 from functools import reduce
@@ -6,6 +6,7 @@ import subprocess
 import requests
 import shutil
 import json
+import yaml
 import sys
 import os
 
@@ -160,32 +161,22 @@ def gkeep_upload(press_enter=True):
         waitForEnter()    
 
 
-def print_entry_details(entry):
+def print_entry_details(entry, removed_links=[]):
     print_entry  = f'Description: {entry[DESC]}\n'
     print_entry += f'Open in incognito mode: {entry[INCOGNITO]}\n'
-    print_entry += f'Links:\n'
+    print_entry += f'Links:'
     
     for pos in range(len(entry[LINKS])):
-        print_entry += f'{pos + 1}. {entry[LINKS][pos]}\n'
+        removed_text = "(set to be removed) " if (pos + 1) in removed_links else ""
+        print_entry += f'\n{pos + 1}. {removed_text}{entry[LINKS][pos]}'
 
     return print_entry
 
 
-# if the entry exists, it will accept empty description
-# otherwise it will cancel when it is empty
-def create_or_edit_entry(editing=False, prev_links=[]):
-    description = input("Description: ")
-
-    # if a new entry is being added and the description is empty, cancels action
-    if not editing and (not description or description.isspace()):
-        return None, None, None
-
-    incognito = yes_or_no("Open in incognito mode", default_answer="no", other_options=[""] if editing else [], newline=False).capitalize()
-
+def get_links():
     links = []
     print("Links (type '?' for custom commands info):")
     
-    remaining_links = list(range(len(prev_links)))
     curr_link = input()
     while (not (curr_link == "" or curr_link.isspace())):
 
@@ -193,49 +184,10 @@ def create_or_edit_entry(editing=False, prev_links=[]):
             print(f"For custom input, use the format '{LINK_INPUT_START}input_prompt{LINK_INPUT_END}' within the link (the text will be prompted on every link open).")
             print(f"For custom input to be reused, add variable as 'var var_name={LINK_INPUT_START}input_prompt{LINK_INPUT_END}'. Spaces are not allowed in var_name.")
             print(f"The prompt will be provided only once for every variable, and '{LINK_INPUT_START}var_name{LINK_INPUT_END}' from links will be replaced by its value.")
-            if editing:
-                print("Links will be added to the existing list, do '-{pos}' or '-{link}' to remove an existing link. \
-                    \nDo '-all' (case-sensitive) to remove all existing links, or '-undo' (case-sensitive) to undo all confirmed removals.")
                 
             curr_link = input()
             continue
 
-        # special commands for link editting (removing previous links)
-        if editing and curr_link[0] == '-':
-            curr_pos = -1
-            if curr_link[1:] in prev_links:
-                curr_pos = prev_links.index(curr_link[1:]) 
-
-            if curr_link[1:].isdigit():
-                curr_pos = int(curr_link[1:]) - 1
-
-
-            solved = False
-            if 0 <= curr_pos and curr_pos < len(prev_links):
-                if curr_pos in remaining_links:
-                    print(f"Entry {curr_pos + 1} - '{prev_links[curr_pos]}' will be removed.")
-                    remaining_links.remove(curr_pos)
-                
-                solved = True
-            
-            if curr_link[1:] == 'all':
-                remaining_links = []
-                print("All current links will be removed.")
-
-                solved = True
-
-            if curr_link[1:] == 'undo':
-                remaining_links = list(range(len(prev_links)))
-                print("Previous removals will be ignored.")
-
-                solved = True
-                
-
-            if not solved: 
-                print("Unknown remove option.")
-
-            curr_link = input()
-            continue
 
         # checking that var has an input prompt
         if curr_link.startswith("var ") and LINK_INPUT_START not in curr_link:
@@ -268,9 +220,104 @@ def create_or_edit_entry(editing=False, prev_links=[]):
 
         curr_link = input()
 
-    links = [prev_links[pos] for pos in remaining_links] + links
+    return links
+
+# if the entry exists, it will accept empty description
+# otherwise it will cancel when it is empty
+def create_entry():
+    description = input("Description: ")
+
+    # if the description is empty, cancels adding this entry
+    if (not description or description.isspace()):
+        return None, None, None
+
+    incognito = yes_or_no("Open in incognito mode", default_answer="no", newline=False).capitalize()
+
+    links = get_links()
 
     return description, incognito, links
+
+
+def edit_entry(entry):
+    menu_structure = yaml.safe_load(open(f"{DATAPATH}/link_list_edit.yaml"))
+    menu_structure["Edit"]["Remove links"] = {f'{i}.': None for i in range(1, len(entry[LINKS]) + 1)}
+
+    menu = MenuInterface(menu_structure, submenuColor="light_grey", optionColor="light_grey", supressColorWarning=True)
+
+    cls()
+
+    description   = None
+    incognito     = None
+    added_links   = []
+    removed_links = [] # they will be saved by the index
+
+    while True:
+        menu.changeMainMenu(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links))
+        path = menu.interactWithMenu()
+
+        # ignoring backspace in main menu
+        if not path:
+            continue
+        
+        option = path[-1]
+        option = option[:option.find(' ')]
+
+        if option == "Save":
+            changed = (description or incognito or added_links or removed_links)
+            if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to save changes?", "no")) == "no":
+                continue
+            
+            all_links = entry[LINKS] + added_links
+            return description, incognito, [all_links[pos] for pos in range(len(all_links)) if (pos + 1) not in removed_links] 
+
+
+        if option == "Change":
+            description = menu.separateInteraction(function=lambda: input("New description: "), showCursor=True)
+            description = description if description != entry[DESC] else None # ignoring unchanged description
+            continue
+
+        if option == "Toggle":
+            if not incognito:
+                incognito = "Yes" if entry[INCOGNITO] == "No" else "No"
+            else:
+                incognito = None
+            continue
+        
+        if option == "Add":
+            new_links = menu.separateInteraction(function=get_links, showCursor=True)
+            menu.addOptions(['Remove links'], {f'{i}.': None for i in range(len(entry[LINKS] + added_links) + 1, len(entry[LINKS] + added_links + new_links) + 1)})
+            added_links += new_links
+            continue
+
+        if option == "Remove": 
+            menu.setTopText(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links) \
+                            + "\n\nSet links to be removed:\n")
+            continue
+        
+        # setting link to be removed/unremoved
+        if 2 <= len(path) and path[-2] == "Remove links":
+            link_index = int(path[-1][:path[-1].find('.')])
+
+            changes = MenuInterface.selectMultipleOptions([f'{i}.' for i in removed_links], f'{link_index}.', [f'{i}.' for i in range(1, len(entry[LINKS] + added_links) + 1)], 'x')
+
+            # setting link to be removed
+            if link_index not in removed_links:
+                removed_links.append(link_index)
+            # setting link to be unremoved
+            else:
+                removed_links.remove(link_index)
+            
+            menu.changeOptionNames(path[:-1], changes)
+
+            menu.setTopText(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links) \
+                            + "\n\nSet links to be removed:\n")
+            continue
+
+
+        if option == "Cancel": 
+            changed = (description or incognito or added_links or removed_links)
+            if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to cancel changes?", "no")) == "yes":
+                return None, None, entry[LINKS]
 
 
 def parse_link(link, vars):
@@ -315,7 +362,7 @@ Controls:
     - escape     -> quit application.
 """ 
 
-def link_list_loop(console, json_file_path, saved_pos):
+def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
     if not json_file_path:
         return
     
@@ -423,7 +470,7 @@ def link_list_loop(console, json_file_path, saved_pos):
 
         # creating new entry
         if command == key.CTRL_N:
-            description, incognito, links = console.separateInteraction(message="Add new entry:", function=create_or_edit_entry, showCursor=True)
+            description, incognito, links = console.separateInteraction(message="Add new entry:", function=create_entry, showCursor=True)
             
             if not description:
                 console.separateInteraction(message="Description must not be empty.\n")
@@ -449,7 +496,7 @@ def link_list_loop(console, json_file_path, saved_pos):
                 console.separateInteraction(message="Link list is empty.\n")
                 continue
 
-            console.separateInteraction(message=print_entry_details(json_data[DATA][curr_pos]))
+            console.separateInteraction(message=f'{print_entry_details(json_data[DATA][curr_pos])}\n')
 
             continue
 
@@ -459,35 +506,28 @@ def link_list_loop(console, json_file_path, saved_pos):
                 console.separateInteraction(message="Link list is empty.\n")
                 continue
 
-            print_edit_entry = print_entry_details(json_data[DATA][curr_pos])
+            description, incognito, links = console.separateInteraction(function=lambda: edit_entry(json_data[DATA][curr_pos]))
 
-            print_edit_entry = print_edit_entry + "\n"
-
-            print_edit_entry += "Input new information or leave empty to keep it the same.\n"
-            print_edit_entry += "Warning: Overwritten data will be lost.\n\n"
-
-            print_edit_entry += "New fields:\n"
-
-            prev_links = json_data[DATA][curr_pos][LINKS]
-
-            description, incognito, links = console.separateInteraction(message=print_edit_entry, function=lambda: 
-                                                        create_or_edit_entry(editing=True, prev_links=prev_links), startAtTop=True, showCursor=True)
+            print(description)
+            print(incognito)
+            print(links)
+            input()
                 
-            if description != "":
+            if description:
                 json_data[DESCRIPTIONS][curr_pos] = description
                 json_data[DATA][curr_pos][DESC] = description
                 console.updateList(json_data[DESCRIPTIONS])
                 
-            if incognito != "":
+            if incognito:
                 json_data[DATA][curr_pos][INCOGNITO] = incognito
                 
-            if json_data[DATA][curr_pos][LINKS] != links: # on edit, we only care about potentially added links for auto-upload
+            if json_data[DATA][curr_pos][LINKS] != links: # in edit, we only care about potentially added links for auto-upload
                 console.upload = True
 
             json_data[DATA][curr_pos][LINKS] = links
 
             # at least one field was changed, updating file
-            if description != "" or incognito != "" or links:
+            if description or incognito or links:
                 with open(json_file_path, 'w', encoding='utf-8') as file:
                     json.dump(json_data, file, ensure_ascii=False, indent=4)
 
@@ -632,6 +672,7 @@ def link_list_loop(console, json_file_path, saved_pos):
 
         # quit application
         if command == key.ESC:
+            console.upload = False
             console.exitInterface()
 
             # uploading to google keep if changes to links haven't been uploaded
@@ -669,7 +710,7 @@ Controls:
 
 
 # returns selected json file
-def json_file_loop(console, saved_pos=0):
+def json_file_loop(console: ConsoleListInterface, saved_pos=0):
     files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
     files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
@@ -844,6 +885,7 @@ def json_file_loop(console, saved_pos=0):
 
         # quit application
         if command == key.ESC:
+            console.upload = False
             console.exitInterface()
             
             # uploading to google keep if changes to links haven't been uploaded
