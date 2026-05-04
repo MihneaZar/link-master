@@ -231,7 +231,7 @@ def edit_entry(entry):
     menu_structure = yaml.safe_load(open(f"{DATAPATH}/link_list_edit.yaml"))
     menu_structure["Edit"]["Remove links"] = {f'{i}.': None for i in range(1, len(entry[LINKS]) + 1)}
 
-    menu = MenuInterface(menu_structure, submenuColor="light_grey", optionColor="light_grey", supressColorWarning=True)
+    menu = MenuInterface(menu_structure, submenuColor="light_grey", optionColor="light_grey", supressColorWarning=True, dontPrintList=True)
 
     cls()
 
@@ -258,7 +258,6 @@ def edit_entry(entry):
                 return description, incognito, [all_links[pos] for pos in range(len(all_links)) if (pos + 1) not in removed_links] 
             
             continue
-            
 
 
         if option == "Change":
