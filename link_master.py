@@ -38,18 +38,20 @@ sys.stderr = open(f'{DATAPATH}/errors.txt', "a")
 LINK_INPUT_START = '\\{'
 LINK_INPUT_END   = '\\}'
 
+YES = YES
+NO = NO
 
 # creating json_data folder
 if not os.path.isdir(JSONFOLDER):
     os.mkdir(JSONFOLDER)
     shutil.copy(f'{DATAPATH}/Examples.json', f'{JSONFOLDER}/Examples.json')
 
-def yes_or_no(question, default_answer="Yes", newline=True):
+def yes_or_no(question, default_answer=YES, newline=True):
     if newline:
         print(f'{question}\nY/N', flush=True)
     else: 
         print(f'{question} (Y/N): ', end='', flush=True)
-
+   default_answer = default_answer.capitalize()
     answer = readkey().lower()
     while not answer in ['y', 'n']:
         if answer == key.ENTER:
@@ -61,7 +63,7 @@ def yes_or_no(question, default_answer="Yes", newline=True):
         answer = readkey().lower()
 
     
-    answer = "Yes" if answer == 'y' else "No"
+    answer = YES if answer == 'y' else NO
     print(answer)
     if newline:
         print()
@@ -222,7 +224,7 @@ def create_entry():
     if (not description or description.isspace()):
         return None, None, None
 
-    incognito = yes_or_no("Open in incognito mode", default_answer="No", newline=False)
+    incognito = yes_or_no("Open in incognito mode", default_answer=NO, newline=False)
 
     links = get_links()
 
@@ -255,7 +257,7 @@ def edit_entry(entry):
 
         if option == "Save":
             changed = (description or incognito or added_links or removed_links)
-            if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to save changes?", "No")) == "Yes":
+            if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to save changes?", NO)) == YES:
                 all_links = entry[LINKS] + added_links
                 return description, incognito, [all_links[pos] for pos in range(len(all_links)) if (pos + 1) not in removed_links] 
             
@@ -270,7 +272,7 @@ def edit_entry(entry):
 
         if option == "Toggle":
             if not incognito:
-                incognito = "Yes" if entry[INCOGNITO] == "No" else "No"
+                incognito = YES if entry[INCOGNITO] == NO else NO
             else:
                 incognito = None
             continue
@@ -308,7 +310,7 @@ def edit_entry(entry):
 
         if option == "Cancel": 
             changed = (description or incognito or added_links or removed_links)
-            if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to cancel changes?", "No")) == "Yes":
+            if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to cancel changes?", NO)) == YES:
                 return None, None, entry[LINKS]
 
 
@@ -379,7 +381,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             entry  = json_data[DATA][curr_pos]
             answer = entry[INCOGNITO].lower()
 
-            chrome_arg = "" if answer == "no" else "-incognito"
+            chrome_arg = "" if answer == NO else "-incognito"
 
             # resolving link variables
             vars = {}
@@ -623,9 +625,9 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 console.separateInteraction(message="Link list is empty.\n")
                 continue
 
-            remove_answer = console.separateInteraction(function=lambda: yes_or_no(f'Are you sure you want to remove \'{json_data[DESCRIPTIONS][curr_pos]}\'?\nData will be lost forever.', default_answer="No"), showCursor=True)
+            remove_answer = console.separateInteraction(function=lambda: yes_or_no(f'Are you sure you want to remove \'{json_data[DESCRIPTIONS][curr_pos]}\'?\nData will be lost forever.', default_answer=NO), showCursor=True)
 
-            if remove_answer == "No":
+            if remove_answer == NO:
                 continue
 
             json_data[DATA].pop(curr_pos)
@@ -665,7 +667,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
         # quit application
         if command == key.ESC:
-            console.upload = False
+            # console.upload = False
             console.exitInterface()
 
             # uploading to google keep if changes to links haven't been uploaded
@@ -673,7 +675,8 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 try:
                     gkeep_upload(False)
                 except Exception as e:
-                    console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
+                    # console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
+                    pass
             quit()
 
 
@@ -839,7 +842,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
 
         if command == key.CTRL_T:
             if console.hideFiles:
-                console.hideFiles = (console.separateInteraction(function=lambda: yes_or_no("Show hidden lists?", default_answer="No"), showCursor=True) == "No")
+                console.hideFiles = (console.separateInteraction(function=lambda: yes_or_no("Show hidden lists?", default_answer=NO), showCursor=True) == NO)
                 if not console.hideFiles:
                     curr_file = files[curr_pos]
                     files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
@@ -878,7 +881,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
 
         # quit application
         if command == key.ESC:
-            console.upload = False
+            # console.upload = False
             console.exitInterface()
             
             # uploading to google keep if changes to links haven't been uploaded
@@ -886,7 +889,8 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 try:
                     gkeep_upload(False)
                 except Exception as e:
-                    console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
+                    # console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
+                    pass
             quit()
 
 
