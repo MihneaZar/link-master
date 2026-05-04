@@ -34,15 +34,15 @@ Then paste the Access Token here (or leave empty to cancel):
 
 def test_gkeep_upload():
     try:
-        gkeep_upload(press_enter=False)
+        gkeep_upload()
         print("Uploading to Google Keep is working.\nPress enter to continue.")
         waitForEnter()
     except Exception as e:
         print(f"\nError: '{type(e).__name__}'.")
-        if type(e).__name__ == 'LoginException':
-            print("Master Token authentification failed, check that it is correct or retry obtaining it with an Access Token.")
-        elif type(e).__name__ == 'ModuleNotFoundError':
+        if type(e).__name__ == 'ModuleNotFoundError':
             print("The 'gkeepapi' library is missing.\nPlease install it with 'pip3 install gkeepapi' to be able to upload the link lists to Google Keep.")
+        elif type(e).__name__ == 'LoginException':
+            print("Master Token authentification failed, check that it is correct or retry obtaining it with an Access Token.")
         elif type(e).__name__ == 'FileNotFoundError' or type(e).__name__ == 'OSError' or type(e).__name__ == 'JSONDecodeError':
             print("The cache file path is broken, or it is not JSON-formatted.\nThis path will be removed, but you can change it back to an existing JSON file through the fourth setup option.")
             KEEP_TOKEN = open(f'{DATAPATH}/.paths', 'r').readline()

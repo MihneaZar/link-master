@@ -1,4 +1,4 @@
-from ConsoleListInterface import ConsoleListInterface, MenuInterface, waitForEnter, cls
+from ConsoleListInterface import ConsoleListInterface, MenuInterface, cls
 from send2trash import send2trash
 from readchar import readkey, key
 from functools import reduce
@@ -72,8 +72,7 @@ def yes_or_no(question, default_answer=YES, newline=True):
     return answer
 
     
-
-def gkeep_upload(press_enter=True):
+def gkeep_upload():
     if not gkeepapi_imported:
         raise ModuleNotFoundError
 
@@ -83,7 +82,8 @@ def gkeep_upload(press_enter=True):
     KEEP_TOKEN = paths[0]
     KEEP_PATH  = paths[1] if paths[1] else f'{DATAPATH}/.keep.json'
 
-    import gkeepapi
+    if not KEEP_TOKEN or KEEP_TOKEN.isspace():
+        raise gkeepapi.exception.LoginException
 
     print("Starting Google Keep upload...")
 
@@ -149,10 +149,6 @@ def gkeep_upload(press_enter=True):
         json.dump(keep.dump(), file)
 
     print("Upload complete.\n")
-
-    if press_enter:
-        print("Press enter to continue.")
-        waitForEnter()    
 
 
 def print_entry_details(entry, removed_links=[]):
@@ -667,7 +663,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
         # quit application
         if command == key.ESC:
-            # console.upload = False
+            console.upload = True
             console.exitInterface()
 
             # uploading to google keep if changes to links haven't been uploaded
@@ -881,7 +877,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
 
         # quit application
         if command == key.ESC:
-            # console.upload = False
+            console.upload = True
             console.exitInterface()
             
             # uploading to google keep if changes to links haven't been uploaded
@@ -890,6 +886,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                     gkeep_upload(False)
                 except Exception as e:
                     # console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
+                    print("bad")
                     pass
             quit()
 
