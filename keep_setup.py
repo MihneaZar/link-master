@@ -79,7 +79,7 @@ def get_path(path, must_exist=True, check_dir=False, check_file=False, replace_q
     return realpath
 
 def keep_menu():
-    menu = MenuInterface(yaml.safe_load(open(f"{DATAPATH}/keep_menu.yaml")))
+    menu = MenuInterface(yaml.safe_load(open(f"{DATAPATH}/keep_menu.yaml")), dontPrintMenu=True)
 
     while True:
         info_message = ""
@@ -95,7 +95,7 @@ def keep_menu():
                 if KEEP_PATH:
                     info_message += f"Current saved path for Keep Cache: {KEEP_PATH}.\n"
 
-        menu.setTopText(colored("Manage your Keep Token and Cache file\n", "blue") + colored(info_message, "light_blue"))    
+        menu.changeMainMenuTitle(colored("Manage your Keep Token and Cache file\n", "blue") + colored(info_message, "light_blue"))    
                 
         path = menu.interactWithMenu()
 

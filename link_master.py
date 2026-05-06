@@ -239,7 +239,7 @@ def edit_entry(entry):
     removed_links = [] # they will be saved by the index
 
     while True:
-        menu.changeMainMenu(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links))
+        menu.changeMainMenuTitle(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links))
         path = menu.interactWithMenu()
 
         # ignoring backspace in main menu
