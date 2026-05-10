@@ -641,7 +641,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             # uploading to google keep if changes to links haven't been uploaded
             if console.upload:
                 try:
-                    gkeep_upload(False)
+                    gkeep_upload()
                 except Exception as e:
                     # console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
                     pass
@@ -858,7 +858,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
             # uploading to google keep if changes to links haven't been uploaded
             if console.upload:
                 try:
-                    gkeep_upload(False)
+                    gkeep_upload()
                 except Exception as e:
                     # console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
                     pass
