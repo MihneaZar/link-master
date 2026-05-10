@@ -10,7 +10,6 @@ A Link List page contains multiple entries. An entry has a description (e.g. 'Di
 - The [PyYAML](https://pypi.org/project/PyYAML/) library for loading the link entry menu and the Google Keep setup menu;
 - (Optional) The [gpsoauth](https://github.com/simon-weber/gpsoauth) library for obtaining the Google Master Token, needed for uploading to Google Keep;
 - (Optional) The [gkeepapi](https://github.com/kiwiz/gkeepapi) library for actually uploading notes to Google Keep;
-- (Optional) The [termcolor](https://pypi.org/project/termcolor/) library for colored text (only needed for the Google Keep setup program).
 
 ## Additional Information
 The program opens the links in Google Chrome / Google Incognito. <br>
