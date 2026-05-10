@@ -16,7 +16,7 @@ except:
     gkeepapi_imported = False
 
 HOMEPATH   = os.path.dirname(os.path.realpath(__file__)) 
-DATAPATH   = f"{HOMEPATH}/metadata"
+DATAPATH   = f"{HOMEPATH}/data"
 JSONFOLDER = f"{HOMEPATH}/json_data"
 
 sys.stderr = open(f'{DATAPATH}/errors.txt', "a")
@@ -324,30 +324,8 @@ def parse_link(link, vars):
     return link
 
                                                                                # overwriting internal rename command
-LINK_COMMANDS_LIST = [key.ENTER, key.CTRL_O, key.CTRL_N, key.CTRL_D, key.CTRL_E, key.CTRL_R, key.CTRL_X, key.CTRL_C, key.DELETE, key.CTRL_B, key.CTRL_K, key.BACKSPACE, key.ESC]
-LINK_HELP_PAGE    = f"""
-Link list page.
-
-Controls:
-    - arrow keys -> moving between existing entries in list.
-    - character  -> move cursor to the next entry that starts with character, if it exists.
-    - ctrl+f     -> search for the next entry that contains string, if it exists (not case sensitive).
-    - '\\'        -> find next entry that contains last searched string.
-    - enter      -> open entry links, in the selected mode (normal or incognito).
-    - ctrl+o     -> download headers and webpage content from link to given folder.
-    - ctrl+n     -> create new entry.
-    - ctrl+d     -> see details of selected entry.
-    - ctrl+e     -> edit info for selected entry.
-    - ctrl+x     -> move selected entry into another link list.
-    - ctrl+c     -> copy selected entry into a chosen link list (including the same one).
-    - delete     -> remove entry (warning: data is lost forever).
-    - ctrl+u     -> update printed list (for terminal size change).
-    - ctrl+k     -> upload all new changes (in this list and all others) to Google Keep.
-    - '='/'-'    -> increase/decrease number of characters in entry names before they are cut off.
-    - '?'        -> display current help page.
-    - backspace  -> return to main menu (list of all link lists).
-    - escape     -> quit application.
-""" 
+LINK_COMMANDS_LIST = [key.ENTER, key.CTRL_O, key.CTRL_N, key.CTRL_D, key.CTRL_E, key.CTRL_R, key.CTRL_X, key.CTRL_C, key.DELETE, 
+                      key.CTRL_K, key.BACKSPACE, '?', key.ESC]
 
 def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
     if not json_file_path:
@@ -359,7 +337,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
     json_data = json.load(open(json_file_path))
 
     console.updateList(json_data[DESCRIPTIONS])
-    console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
+    console.configure(specialCommands=LINK_COMMANDS_LIST)
     console.updatePos(0)
 
     while (True):
@@ -529,7 +507,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             if not move_file_path or json_file_path == move_file_path:
                 console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
                 console.updateList(json_data[DESCRIPTIONS])
-                console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
+                console.configure(specialCommands=LINK_COMMANDS_LIST)
                 console.updatePos(curr_pos)
                 continue
 
@@ -552,7 +530,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
 
             console.updateList(json_data[DESCRIPTIONS])
-            console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
+            console.configure(specialCommands=LINK_COMMANDS_LIST)
             console.updatePos(curr_pos)
 
             continue
@@ -571,7 +549,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             if not copy_file_path:
                 console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
                 console.updateList(json_data[DESCRIPTIONS])
-                console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
+                console.configure(specialCommands=LINK_COMMANDS_LIST)
                 console.updatePos(curr_pos)
                 continue
 
@@ -601,7 +579,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             console.setTopText(f'json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]\n')
             
             console.updateList(json_data[DESCRIPTIONS])
-            console.configure(specialCommands=LINK_COMMANDS_LIST, helpPage=LINK_HELP_PAGE)
+            console.configure(specialCommands=LINK_COMMANDS_LIST)
             console.updatePos(curr_pos)
 
             continue
@@ -652,6 +630,10 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             return
 
 
+        # help menu
+        if command == '?':
+            console.separateInteraction(function=lambda: MenuInterface.helpMenu(yaml.safe_load(open(f"{DATAPATH}/link_list_help_menu.yaml")), 'light_grey', 'light_grey'))
+
         # quit application
         if command == key.ESC:
             console.exitInterface()
@@ -667,7 +649,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
 
 # IMPORTANT NOTE: CTRL_H is SAME as BACKSPACE
-FILE_COMMANDS_LIST = [key.ENTER, key.CTRL_N, key.CTRL_R, key.DELETE, key.CTRL_B, key.CTRL_U, key.CTRL_T, key.CTRL_K, key.BACKSPACE, key.ESC]
+FILE_COMMANDS_LIST = [key.ENTER, key.CTRL_N, key.CTRL_R, key.DELETE, key.CTRL_B, key.CTRL_U, key.CTRL_T, key.CTRL_K, key.BACKSPACE, '?', key.ESC]
 FILE_HELP_PAGE    = """
 Link Master main menu.
 
@@ -864,6 +846,10 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
         if command == key.BACKSPACE:
             return None, curr_pos
 
+
+        # help menu
+        if command == '?':
+            console.separateInteraction(function=lambda: MenuInterface.helpMenu(yaml.safe_load(open(f"{DATAPATH}/link_master_help_menu.yaml")), 'light_grey', 'light_grey'))
 
         # quit application
         if command == key.ESC:

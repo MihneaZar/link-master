@@ -1,0 +1,19 @@
+How do I move between link lists?:
+    - "- arrow keys -> moving between link lists."
+    - "- character  -> move cursor to the next link list that starts with character, if it exists."
+    - "- ctrl+f     -> search for the next link list that contains string, if it exists (not case sensitive)."
+    - "- '\\'        -> find next link list that contains last searched string."
+    - "- ctrl+t     -> toggle showing hidden link lists (to make a list hidden, name it starting with '.')."
+    - "- enter      -> open selected link list (or move/copy entry to selected link list)."
+    - "- backspace  -> if currently moving or copying entry, cancel action."
+Edit entries:
+    - "- ctrl+n -> create new link list."
+    - "- ctrl+r -> rename selected link list."
+    - "- delete -> move link list to recycle bin."
+    - "- ctrl+b -> open recycle bin, to restore link lists."
+    - "- ctrl+k -> upload all new changes in all link lists to Google Keep."
+Application options:
+    - "- ctrl+u  -> update list (if terminal window was resized)."
+    - "- '='/'-' -> increase/decrease number of characters in link list descriptions before they are cut off."
+    - "- '?'     -> display current help page."
+    - "- escape  -> quit application."
