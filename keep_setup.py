@@ -35,7 +35,7 @@ Then paste the Access Token here (or leave empty to cancel):
 def test_gkeep_upload():
     try:
         gkeep_upload()
-        print("Uploading to Google Keep is working.\nPress enter to continue.")
+        print("Google Keep upload is working.\nPress enter to continue.")
         waitForEnter()
     except Exception as e:
         print(f"\nError: '{type(e).__name__}'.")
