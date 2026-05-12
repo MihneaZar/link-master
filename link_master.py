@@ -156,7 +156,6 @@ def print_entry_details(entry, removed_links=[]):
     print_entry += f'Links:'
     
     for pos in range(len(entry[LINKS])):
-        print_entry += f'\n{pos + 1}. '
         if (pos + 1) in removed_links:
             print_entry += f'\n{pos + 1}. (set to be removed) {entry[LINKS][pos]}'
         else:
