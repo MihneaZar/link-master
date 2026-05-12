@@ -156,8 +156,12 @@ def print_entry_details(entry, removed_links=[]):
     print_entry += f'Links:'
     
     for pos in range(len(entry[LINKS])):
-        removed_text = "(set to be removed) " if (pos + 1) in removed_links else ""
-        print_entry += f'\n{pos + 1}. {removed_text}{entry[LINKS][pos]}'
+        print_entry += f'\n{pos + 1}. '
+        if (pos + 1) in removed_links:
+            print_entry += f'\n{pos + 1}. (set to be removed) {entry[LINKS][pos]}'
+        else:
+            # adding the spaces to clear those positions (because of previous 'set to be removed' text) 
+            print_entry += f'\n{pos + 1}. {entry[LINKS][pos]}                    '
 
     return print_entry
 
