@@ -244,13 +244,9 @@ def edit_entry(entry):
     while True:
         menu.changeMainMenuTitle(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links))
         path = menu.interactWithMenu()
-
-        # ignoring backspace in main menu
-        if not path:
-            continue
         
         option = path[-1]
-        option = option[:option.find(' ')]
+        option = option[:option.find(' ')] if ' ' in option else option
 
         if option == "Save":
             changed = (description or incognito or added_links or removed_links)
@@ -304,7 +300,7 @@ def edit_entry(entry):
             continue
 
 
-        if option == "Cancel": 
+        if option in ["Cancel", key.ESC, key.BACKSPACE]: 
             changed = (description or incognito or added_links or removed_links)
             if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to cancel changes?", NO)) == YES:
                 return None, None, entry[LINKS]

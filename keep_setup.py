@@ -1,6 +1,7 @@
 from ConsoleListInterface import MenuInterface, waitForEnter, cls
 from link_master import DATAPATH, KEEP_EMAIL, gkeep_upload
 from termcolor import colored
+from readchar import key
 import yaml
 import sys
 import os 
@@ -99,12 +100,8 @@ def keep_menu():
                 
         path = menu.interactWithMenu()
 
-        # ignoring backspace
-        if not path:
-            continue
-
         option = path[0]
-        option = option[:option.find(' ')]
+        option = option[:option.find(' ')] if ' ' in option else option
 
         if option == "What":
             menu.separateInteraction(message=FULL_EXPLANATION, startAtTop=True)
@@ -199,7 +196,7 @@ def keep_menu():
             menu.separateInteraction(function=test_gkeep_upload)
             continue
 
-        if option == "Exit":
+        if option in ["Exit", key.ESC, key.BACKSPACE]:
             menu.exitInterface()
             return
         
