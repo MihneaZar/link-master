@@ -245,6 +245,10 @@ def edit_entry(entry):
         menu.changeMainMenuTitle(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links))
         path = menu.interactWithMenu()
         
+        # backspace back to main menu
+        if not path:
+            continue
+
         option = path[-1]
         option = option[:option.find(' ')] if ' ' in option else option
 
