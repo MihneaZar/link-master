@@ -334,7 +334,6 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
     if not json_file_path:
         return
     
-    # console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
     console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
     
     json_data = json.load(open(json_file_path))
@@ -564,7 +563,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 with open(json_file_path, 'w', encoding='utf-8') as file:
                     json.dump(json_data, file, ensure_ascii=False, indent=4)
                 
-                console.setTopText('json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]\n')
+                console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
 
                 console.updateList(json_data[DESCRIPTIONS])
 
@@ -579,7 +578,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             with open(copy_file_path, 'w', encoding='utf-8') as file:
                 json.dump(copy_data, file, ensure_ascii=False, indent=4)
 
-            console.setTopText(f'json_file_path[json_file_path.rfind("/") + 1:json_file_path.rfind(".")]\n')
+            console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
             
             console.updateList(json_data[DESCRIPTIONS])
             console.configure(specialCommands=LINK_COMMANDS_LIST)
@@ -681,9 +680,11 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
     files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
     files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
-    console.updateList(files)
-    console.configure(specialCommands=FILE_COMMANDS_LIST, helpPage=FILE_HELP_PAGE)
-    console.updatePos(saved_pos)
+    # backspace on link master main menu
+    if console.getItems() != files:
+        console.updateList(files)
+        console.configure(specialCommands=FILE_COMMANDS_LIST, helpPage=FILE_HELP_PAGE)
+        console.updatePos(saved_pos)
     
     while (True):
         command, curr_pos = console.interact()
@@ -881,6 +882,8 @@ def main():
         while (True):
             console.setTopText("Main Menu\n")
             json_file_path, saved_pos = json_file_loop(console, saved_pos)
+            while not json_file_path:
+                json_file_path, saved_pos = json_file_loop(console, saved_pos)
             link_list_loop(console, json_file_path, saved_pos)
 
 
