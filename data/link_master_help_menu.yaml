@@ -13,7 +13,7 @@ Edit entries:
     - "- ctrl+b -> open recycle bin, to restore link lists."
     - "- ctrl+k -> upload all new changes in all link lists to Google Keep."
 Application options:
-    - "- ctrl+u  -> update list (if terminal window was resized)."
+    - "- ctrl+u  -> update list (if terminal window was resized or list was changed in another Link Master instance)."
     - "- '='/'-' -> increase/decrease number of characters in link list descriptions before they are cut off."
     - "- '?'     -> display current help page."
     - "- escape  -> quit application."

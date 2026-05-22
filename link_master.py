@@ -328,7 +328,7 @@ def parse_link(link, vars):
 
                                                                                # overwriting internal rename command
 LINK_COMMANDS_LIST = [key.ENTER, key.CTRL_O, key.CTRL_N, key.CTRL_D, key.CTRL_E, key.CTRL_R, key.CTRL_X, key.CTRL_C, key.DELETE, 
-                      key.CTRL_K, key.BACKSPACE, '?', key.ESC]
+                      key.CTRL_K, key.BACKSPACE, key.CTRL_U, '?', key.ESC]
 
 def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
     if not json_file_path:
@@ -376,7 +376,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                     open_links.append(link)
 
             for link in open_links:
-                    subprocess.Popen(f'start chrome {chrome_arg} /new-tab \"{link}\"', shell=True)
+                subprocess.Popen(f'start chrome {chrome_arg} /new-tab \"{link}\"', shell=True)
             
             continue
 
@@ -632,6 +632,11 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             return
 
 
+        # update list if it was changed outside current instance
+        if command == key.CTRL_U:
+            json_data = json.load(open(json_file_path))
+            console.updateList(json_data[DESCRIPTIONS])
+
         # help menu
         if command == '?':
             console.separateInteraction(function=lambda: MenuInterface.helpMenu(yaml.safe_load(open(f"{DATAPATH}/link_list_help_menu.yaml")), 'light_grey', 'light_grey'))
@@ -652,28 +657,6 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
 # IMPORTANT NOTE: CTRL_H is SAME as BACKSPACE
 FILE_COMMANDS_LIST = [key.ENTER, key.CTRL_N, key.CTRL_R, key.DELETE, key.CTRL_B, key.CTRL_U, key.CTRL_T, key.CTRL_K, key.BACKSPACE, '?', key.ESC]
-FILE_HELP_PAGE    = """
-Link Master main menu.
-
-Controls:
-    - arrow keys -> moving between existing link lists.
-    - character  -> move cursor to the next link list that starts with character, if it exists.
-    - ctrl+f     -> search for the next link list that contains string, if it exists (not case sensitive).
-    - '\\'        -> find next link list that contains last searched string.
-    - enter      -> open selected link list / moves or copies entry to selected link list.
-    - ctrl+n     -> create new link list.
-    - ctrl+r     -> rename selected link list.
-    - delete     -> move link list to recycle bin.
-    - ctrl+b     -> open recycle bin in Windows File Explorer (to restore link lists).
-    - ctrl+u     -> update available link lists (if one or more have been restored from bin).
-    - ctrl+t     -> toggle showing hidden link lists (to make a list hidsden, name it starting with '.').
-    - '='/'-'    -> increase/decrease number of characters in link list names before they are cut off.
-    - '?'        -> display current help page.
-    - ctrl+k     -> upload all new changes in all link lists to Google Keep.
-    - backspace  -> if currently moving or copying entry, cancel action.
-    - escape     -> quit application.
-""" 
-
 
 # returns selected json file
 def json_file_loop(console: ConsoleListInterface, saved_pos=0):
@@ -683,7 +666,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
     # backspace on link master main menu
     if console.getItems() != files:
         console.updateList(files)
-        console.configure(specialCommands=FILE_COMMANDS_LIST, helpPage=FILE_HELP_PAGE)
+        console.configure(specialCommands=FILE_COMMANDS_LIST)
         console.updatePos(saved_pos)
     
     while (True):
