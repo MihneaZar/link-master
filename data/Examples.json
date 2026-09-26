@@ -1,0 +1,36 @@
+{
+    "Filename": "Examples",
+    "Description List": [
+        "Dictionaries",
+        "Thesaurus Search",
+        "Dictionaries Search"
+    ],
+    "Data": [
+        {
+            "Description": "Dictionaries",
+            "Incognito": "No",
+            "Links": [
+                "https://www.thesaurus.com/browse/",
+                "https://www.merriam-webster.com/thesaurus/",
+                "https://www.wordhippo.com/what-is/another-word-for/"
+            ]
+        },
+        {
+            "Description": "Thesaurus Search",
+            "Incognito": "No",
+            "Links": [
+                "https://www.thesaurus.com/browse/\\{Word to search for\\}"
+            ]
+        },
+        {
+            "Description": "Dictionaries Search",
+            "Incognito": "No",
+            "Links": [
+                "https://www.thesaurus.com/browse/\\{search_str\\}",
+                "https://www.merriam-webster.com/thesaurus/\\{search_str\\}",
+                "https://www.wordhippo.com/what-is/another-word-for/\\{search_str\\}.html",
+                "var search_str = \\{Word to search for\\}"
+            ]
+        }
+    ]
+}

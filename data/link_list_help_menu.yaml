@@ -1,0 +1,22 @@
+How do I move in the current link list?:
+    - "- arrow keys -> moving between entries in link list."
+    - "- character  -> move cursor to the next entry that starts with character, if it exists."
+    - "- ctrl+f     -> search for the next entry that contains string, if it exists (not case sensitive)."
+    - "- '\\'        -> find next entry that contains last searched string."
+    - "- backspace  -> exit current link list."
+Edit entries:
+    - "- ctrl+n -> create new entry."
+    - "- ctrl+d -> see details of selected entry."
+    - "- ctrl+e -> edit info for selected entry."
+    - "- ctrl+x -> move selected entry into another link list."
+    - "- ctrl+c -> copy selected entry into a chosen link list (including the same one)."
+    - "- delete -> remove entry (warning: data is lost forever)."
+    - "- ctrl+k -> upload all new changes (in this list and all others) to Google Keep."
+Open links:
+    - "- enter  -> open entry links, in the selected mode (normal or incognito)."
+    - "- ctrl+o -> download headers and webpage content from link to given file."
+Application options:
+    - "- ctrl+u  -> update list (if terminal window was resized)."
+    - "- '='/'-' -> increase/decrease number of characters in entry descriptions before they are cut off."
+    - "- '?'     -> display current help page."
+    - "- escape  -> quit application."
