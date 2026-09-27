@@ -1,4 +1,4 @@
-from ConsoleListInterface import ConsoleListInterface, MenuInterface, waitForEnter
+from ConsoleListInterface import ConsoleListInterface, MenuInterface
 from send2trash import send2trash
 from readchar import readkey, key
 import subprocess
@@ -90,7 +90,6 @@ def gkeep_upload():
 
     print("Downloading newest versions of notes...")
     if os.path.isfile(KEEP_PATH):
-        # keep.authenticate(KEEP_EMAIL, KEEP_TOKEN, state=json.load(open(KEEP_PATH)))
         try: 
             keep.authenticate(KEEP_EMAIL, KEEP_TOKEN, state=json.load(open(KEEP_PATH)))
         except gkeepapi.exception.ResyncRequiredException:
