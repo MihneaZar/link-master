@@ -4,8 +4,7 @@ from termcolor import colored
 from readchar import key
 import yaml
 import sys
-import os 
-
+import os
 
 try:
     gpsoauth_import = True
@@ -48,9 +47,9 @@ def test_gkeep_upload():
             print("The cache file path is broken, or it is not JSON-formatted.\nThis path will be removed, but you can change it back to an existing JSON file through the fourth setup option.")
             KEEP_TOKEN = open(f'{DATAPATH}/.paths', 'r').readline()
             open(f'{DATAPATH}/.paths', 'w').write(KEEP_TOKEN)
-        elif type(e).__name__ == 'ResyncRequiredException':
-            os.remove(open(f'{DATAPATH}/.paths', 'r').readlines()[1])
-            print("Since no Google Keep upload has taken place recently, the local cache needs to be reset.\nIt has been deleted automatically, so the upload should work now.")
+        # elif type(e).__name__ == 'ResyncRequiredException':
+        #     os.remove(open(f'{DATAPATH}/.paths', 'r').readlines()[1])
+        #     print("Since no Google Keep upload has taken place recently, the local cache needs to be reset.\nIt has been deleted automatically, so the upload should work now.")
         else:
             print("Unknown error type.")
         print()
