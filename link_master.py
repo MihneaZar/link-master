@@ -1,6 +1,7 @@
 from ConsoleListInterface import ConsoleListInterface, MenuInterface
 from send2trash import send2trash
 from readchar import readkey, key
+from termcolor import colored
 import subprocess
 import requests
 import shutil
@@ -249,7 +250,7 @@ def edit_entry(entry):
         menu.changeMainMenuTitle(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links))
         path = menu.interactWithMenu()
         
-        # backspace back to main menu
+        # backspace from 'Remove links' option
         if not path:
             continue
 
@@ -308,6 +309,7 @@ def edit_entry(entry):
             continue
 
 
+        # backspace and esc are treated as choosing the 'Cancel changes' option
         if option in ["Cancel", key.ESC, key.BACKSPACE]: 
             changed = (description or incognito or added_links or removed_links)
             if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to cancel changes?", NO)) == YES:
@@ -867,7 +869,7 @@ def main():
         console.upload    = False # determines whether the app will automatically start gkeep_upload on quit (Esc) 
         console.setTitle("Link Master")
         while (True):
-            console.setTopText("Main Menu\n")
+            console.setTopText(colored("Link Lists\n", "blue"))
             json_file_path, saved_pos = json_file_loop(console, saved_pos)
             while not json_file_path:
                 json_file_path, saved_pos = json_file_loop(console, saved_pos)
