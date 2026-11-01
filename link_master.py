@@ -161,15 +161,20 @@ def print_entry_details(entry, removed_links=[]):
     print_entry += f'{colored("Links", "light_blue")}:'
     
     for pos in range(len(entry[LINKS])):
+        # extra space for links 1-9 if there are 10 links or more (so that all links are aligned)
+        padding = ' ' if pos <= 8 and 10 <= len(entry[LINKS]) else ''
         name = entry[LINKS][pos]
+        print_entry += f'\n{colored(str(pos + 1) + ". " + padding, "light_blue")}'
         if (pos + 1) in removed_links:
-            if shutil.get_terminal_size()[0] < len("xx. (set to be removed) ") + len(name):
-                name = name[:shutil.get_terminal_size()[0] - len("xx. (set to be removed) ") - 1] + '-'
-            print_entry += f'\n{colored(str(pos + 1) + ". (set to be removed)", "light_blue")} {name}'
+            print_entry += f'{colored("(set to be removed) ", "light_blue")}'
+            index_length = len("xx. (set to be removed) ")
         else:
-            if shutil.get_terminal_size()[0] < len("xx. ") + len(name):
-                name = name[:shutil.get_terminal_size()[0] - len("xx. ") - 1] + '-'
-            print_entry += f'\n{colored(str(pos + 1) + ".", "light_blue")} {name}'
+            index_length = len("xx. ")
+
+        if shutil.get_terminal_size()[0] < index_length + len(name):
+            name = name[:shutil.get_terminal_size()[0] - index_length - 1] + '-'
+
+        print_entry += name
 
     return print_entry
 
