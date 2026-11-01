@@ -161,11 +161,15 @@ def print_entry_details(entry, removed_links=[]):
     print_entry += f'{colored("Links", "light_blue")}:'
     
     for pos in range(len(entry[LINKS])):
+        name = entry[LINKS][pos]
         if (pos + 1) in removed_links:
-            print_entry += f'\n{colored(str(pos + 1) + ". (set to be removed)", "light_blue")} {entry[LINKS][pos]}'
+            if shutil.get_terminal_size()[0] < len("xx. (set to be removed) ") + len(name):
+                name = name[:shutil.get_terminal_size()[0] - len("xx. (set to be removed) ") - 1] + '-'
+            print_entry += f'\n{colored(str(pos + 1) + ". (set to be removed)", "light_blue")} {name}'
         else:
-            # adding the spaces to clear those positions (because of previous 'set to be removed' text) 
-            print_entry += f'\n{colored(str(pos + 1) + ".", "light_blue")} {entry[LINKS][pos]}                    '
+            if shutil.get_terminal_size()[0] < len("xx. ") + len(name):
+                name = name[:shutil.get_terminal_size()[0] - len("xx. ") - 1] + '-'
+            print_entry += f'\n{colored(str(pos + 1) + ".", "light_blue")} {name}'
 
     return print_entry
 
