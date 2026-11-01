@@ -156,16 +156,16 @@ def gkeep_upload():
 
 
 def print_entry_details(entry, removed_links=[]):
-    print_entry  = f'Description: {entry[DESC]}\n'
-    print_entry += f'Open in incognito mode: {entry[INCOGNITO]}\n'
-    print_entry += f'Links:'
+    print_entry  = f'{colored("Description", "light_blue")}: {entry[DESC]}\n'
+    print_entry += f'{colored("Open in incognito mode", "light_blue")}: {entry[INCOGNITO]}\n'
+    print_entry += f'{colored("Links", "light_blue")}:'
     
     for pos in range(len(entry[LINKS])):
         if (pos + 1) in removed_links:
-            print_entry += f'\n{pos + 1}. (set to be removed) {entry[LINKS][pos]}'
+            print_entry += f'\n{colored(str(pos + 1) + ". (set to be removed)", "light_blue")} {entry[LINKS][pos]}'
         else:
             # adding the spaces to clear those positions (because of previous 'set to be removed' text) 
-            print_entry += f'\n{pos + 1}. {entry[LINKS][pos]}                    '
+            print_entry += f'\n{colored(str(pos + 1) + ".", "light_blue")} {entry[LINKS][pos]}                    '
 
     return print_entry
 
@@ -239,7 +239,7 @@ def edit_entry(entry):
     menu_structure = yaml.safe_load(open(f"{DATAPATH}/link_list_edit.yaml"))
     menu_structure["Edit"]["Remove links"] = {f'{i}.': None for i in range(1, len(entry[LINKS]) + 1)}
 
-    menu = MenuInterface(menu_structure, submenuColor="light_grey", optionColor="light_grey", supressColorWarning=True, dontPrintMenu=True)
+    menu = MenuInterface(menu_structure, submenuColor="light_blue", optionColor="light_blue", supressColorWarning=True, dontPrintMenu=True)
 
     description   = None
     incognito     = None
@@ -286,7 +286,7 @@ def edit_entry(entry):
 
         if option == "Remove": 
             menu.setTopText(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links) \
-                            + "\n\nSet links to be removed:\n")
+                            + f'\n\n{colored("Set links to be removed", "light_blue")}:\n')
             continue
         
         # setting link to be removed/unremoved
@@ -305,7 +305,7 @@ def edit_entry(entry):
             menu.changeOptionNames(path[:-1], changes)
 
             menu.setTopText(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links) \
-                            + "\n\nSet links to be removed:\n")
+                            + f'\n\n{colored("Set links to be removed", "light_blue")}:\n')
             continue
 
 
@@ -340,11 +340,11 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
     if not json_file_path:
         return
     
-    console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
+    console.setTopText(f"{colored(json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')], 'light_blue')}\n")
     
     json_data = json.load(open(json_file_path))
 
-    console.updateList(json_data[DESCRIPTIONS])
+    console.updateList([colored(desc, "cyan") for desc in json_data[DESCRIPTIONS]])
     console.configure(specialCommands=LINK_COMMANDS_LIST)
     console.updatePos(0)
 
@@ -669,11 +669,9 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
     files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
     files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
-    # backspace on link master main menu
-    if console.getItems() != files:
-        console.updateList(files)
-        console.configure(specialCommands=FILE_COMMANDS_LIST)
-        console.updatePos(saved_pos)
+    console.updateList([colored(file, "light_blue") for file in files])
+    console.configure(specialCommands=FILE_COMMANDS_LIST)
+    console.updatePos(saved_pos)
     
     while (True):
         command, curr_pos = console.interact()
@@ -711,7 +709,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
                 files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
-                console.updateList(files)
+                console.updateList([colored(file, "light_blue") for file in files])
                 console.updatePos(files.index(filename))
 
             except:
@@ -751,7 +749,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
                 files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
                     
-                console.updateList(files)
+                console.updateList([colored(file, "light_blue") for file in files])
                 if filename in files:
                     console.updatePos(files.index(filename))
                 
@@ -768,7 +766,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 send2trash(f'{JSONFOLDER}/{file}.json'.replace('/', '\\')) # this function requires backslashes
                 files.pop(curr_pos)
 
-                console.updateList(files)
+                console.updateList([colored(file, "light_blue") for file in files])
 
                 curr_pos -= 1
 
@@ -797,10 +795,10 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
             files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
             files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
-            console.updateList(files)
+            console.updateList([colored(file, "light_blue") for file in files])
             continue
 
-
+        # toggle hidden lists
         if command == key.CTRL_T:
             if console.hideFiles:
                 console.hideFiles = (console.separateInteraction(function=lambda: yes_or_no("Show hidden lists?", default_answer=NO), showCursor=True) == NO)
@@ -808,7 +806,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                     curr_file = files[curr_pos]
                     files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
 
-                    console.updateList(files)
+                    console.updateList([colored(file, "light_blue") for file in files])
                     console.updatePos(files.index(curr_file))
             else:
                 console.hideFiles = True
@@ -816,7 +814,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
                 files = list(filter(lambda file: file[0] != '.', files))
 
-                console.updateList(files)
+                console.updateList([colored(file, "light_blue") for file in files])
                 if curr_file in files:
                     console.updatePos(files.index(curr_file))
                 
@@ -870,7 +868,7 @@ def main():
         console.setTitle("Link Master")
         while (True):
             console.setTopText(colored("Link Lists\n", "blue"))
-            json_file_path, saved_pos = json_file_loop(console, saved_pos)
+            json_file_path = None
             while not json_file_path:
                 json_file_path, saved_pos = json_file_loop(console, saved_pos)
             link_list_loop(console, json_file_path, saved_pos)
