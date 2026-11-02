@@ -1,4 +1,4 @@
-from ConsoleListInterface import ConsoleListInterface, MenuInterface
+from ConsoleListInterface import ConsoleListInterface, MenuInterface, autocomplete
 from send2trash import send2trash
 from readchar import readkey, key
 from termcolor import colored
@@ -277,7 +277,7 @@ def edit_entry(entry):
 
 
         if option == "Change":
-            description = menu.separateInteraction(function=lambda: input(f'{colored("New description", "light_blue")}: '), showCursor=True)
+            description = menu.separateInteraction(function=lambda: autocomplete([entry[DESC], description], f'{colored("New description", "light_blue")}: '), showCursor=True)
             description = description if description != entry[DESC] else None # ignoring unchanged description
             continue
 
@@ -730,7 +730,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
         # rename link list
         if command == key.CTRL_R:
             file = files[curr_pos]
-            filename = console.separateInteraction(function=lambda: input(f'{colored("Rename", "blue")} {colored(file, "light_blue")} {colored("to:", "blue")}\n'), showCursor=True)
+            filename = console.separateInteraction(function=lambda: autocomplete([file], f'{colored("Rename", "blue")} {colored(file, "light_blue")} {colored("to:", "blue")}\n'), showCursor=True)
 
             try:
                 # ignoring command if filename is empty
