@@ -350,12 +350,12 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
     if not json_file_path:
         return
     
-    console.setTopText(f"{colored(json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')], 'light_blue')}\n")
+    console.setTopText(f"{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}\n")
     
     json_data = json.load(open(json_file_path))
 
-    console.updateList([colored(desc, "cyan") for desc in json_data[DESCRIPTIONS]])
-    console.configure(specialCommands=LINK_COMMANDS_LIST)
+    console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan")
+    console.updateList(json_data[DESCRIPTIONS])
     console.updatePos(0)
 
     while (True):
@@ -523,9 +523,9 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             console.setTopText(f"Moving '{entry[DESC]}'\n")
             move_file_path, _ = json_file_loop(console, saved_pos)
             if not move_file_path or json_file_path == move_file_path:
+                console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan")
                 console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
                 console.updateList(json_data[DESCRIPTIONS])
-                console.configure(specialCommands=LINK_COMMANDS_LIST)
                 console.updatePos(curr_pos)
                 continue
 
@@ -547,8 +547,8 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
             console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
 
+            console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan")
             console.updateList(json_data[DESCRIPTIONS])
-            console.configure(specialCommands=LINK_COMMANDS_LIST)
             console.updatePos(curr_pos)
 
             continue
@@ -565,9 +565,9 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
             copy_file_path, _ = json_file_loop(console, saved_pos)
             if not copy_file_path:
+                console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan")
                 console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
                 console.updateList(json_data[DESCRIPTIONS])
-                console.configure(specialCommands=LINK_COMMANDS_LIST)
                 console.updatePos(curr_pos)
                 continue
 
@@ -595,9 +595,9 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 json.dump(copy_data, file, ensure_ascii=False, indent=4)
 
             console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
-            
+
+            console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan")
             console.updateList(json_data[DESCRIPTIONS])
-            console.configure(specialCommands=LINK_COMMANDS_LIST)
             console.updatePos(curr_pos)
 
             continue
@@ -679,8 +679,8 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
     files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
     files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
-    console.updateList([colored(file, "light_blue") for file in files])
-    console.configure(specialCommands=FILE_COMMANDS_LIST)
+    console.configure(specialCommands=FILE_COMMANDS_LIST, topTextColor="blue", itemColor="light_blue")
+    console.updateList(files)
     console.updatePos(saved_pos)
     
     while (True):
@@ -719,7 +719,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
                 files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
-                console.updateList([colored(file, "light_blue") for file in files])
+                console.updateList(files)
                 console.updatePos(files.index(filename))
 
             except:
@@ -759,7 +759,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
                 files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
                     
-                console.updateList([colored(file, "light_blue") for file in files])
+                console.updateList(files)
                 if filename in files:
                     console.updatePos(files.index(filename))
                 
@@ -776,7 +776,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 send2trash(f'{JSONFOLDER}/{file}.json'.replace('/', '\\')) # this function requires backslashes
                 files.pop(curr_pos)
 
-                console.updateList([colored(file, "light_blue") for file in files])
+                console.updateList(files)
 
                 curr_pos -= 1
 
@@ -805,7 +805,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
             files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
             files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
-            console.updateList([colored(file, "light_blue") for file in files])
+            console.updateList(files)
             continue
 
         # toggle hidden lists
@@ -816,7 +816,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                     curr_file = files[curr_pos]
                     files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
 
-                    console.updateList([colored(file, "light_blue") for file in files])
+                    console.updateList(files)
                     console.updatePos(files.index(curr_file))
             else:
                 console.hideFiles = True
@@ -824,7 +824,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
                 files = list(filter(lambda file: file[0] != '.', files))
 
-                console.updateList([colored(file, "light_blue") for file in files])
+                console.updateList(files)
                 if curr_file in files:
                     console.updatePos(files.index(curr_file))
                 
@@ -872,12 +872,12 @@ def main():
 
     else:
         saved_pos = 0
-        console = ConsoleListInterface()
+        console = ConsoleListInterface(dontPrintList=True)
         console.hideFiles = True  # hidden files
         console.upload    = False # determines whether the app will automatically start gkeep_upload on quit (Esc) 
         console.setTitle("Link Master")
         while (True):
-            console.setTopText(colored("Link Lists\n", "blue"))
+            console.setTopText("Link Lists\n")
             json_file_path = None
             while not json_file_path:
                 json_file_path, saved_pos = json_file_loop(console, saved_pos)
