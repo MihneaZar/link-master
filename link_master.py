@@ -35,8 +35,8 @@ KEEP_EMAIL = ""
 sys.stderr = open(f'{DATAPATH}/errors.txt', "a")
 
 # for custom input in the link, such as show season and episode
-LINK_INPUT_START = '\\{'
-LINK_INPUT_END   = '\\}'
+LINK_INPUT_START = '{'
+LINK_INPUT_END   = '}'
 
 YES = "Yes"
 NO  = "No"
@@ -85,11 +85,11 @@ def gkeep_upload():
     if not KEEP_TOKEN or KEEP_TOKEN.isspace():
         raise gkeepapi.exception.LoginException
 
-    print("Starting Google Keep upload...")
+    print(colored("Starting Google Keep upload...", "light_blue"))
 
     keep = gkeepapi.Keep()
 
-    print("Downloading newest versions of notes...")
+    print(colored("Downloading newest versions of notes...", "light_blue"))
     if os.path.isfile(KEEP_PATH):
         try: 
             keep.authenticate(KEEP_EMAIL, KEEP_TOKEN, state=json.load(open(KEEP_PATH)))
@@ -103,11 +103,11 @@ def gkeep_upload():
     if not label:
         label = keep.createLabel('Link Master')
 
-    print("Deleting previous notes in label 'Link Master'...")
+    print(colored("Deleting previous notes in label 'Link Master'...", "light_blue"))
     for note in keep.find(labels=[keep.findLabel('Link Master')]):
         note.delete()
 
-    print("Adding new notes locally...")
+    print(colored("Adding new notes locally...", "light_blue"))
 
     # warning note for the 'Link Master' label, since all notes in label get deleted on upload
     note = keep.createNote("DO NOT ADD THIS LABEL", "All notes with this label are deleted on upload from Link Master app.")
@@ -143,16 +143,16 @@ def gkeep_upload():
             note.archived = True
 
 
-    print("Uploading new notes...")
+    print(colored("Uploading new notes...", "light_blue"))
     keep.sync()
 
-    print("Saving newest Google Keep state (for faster uploads in the future)...")
+    print(colored("Saving newest Google Keep state (for faster uploads in the future)...", "light_blue"))
 
     # Store Keep cache
     with open(KEEP_PATH, 'w') as file:
         json.dump(keep.dump(), file)
 
-    print("Upload complete.\n")
+    print(colored("Upload complete.\n", "light_blue"))
 
 
 def print_entry_details(entry, removed_links=[]):
@@ -181,7 +181,7 @@ def print_entry_details(entry, removed_links=[]):
 
 def get_links():
     links = []
-    print("Links (type '?' for custom commands info):")
+    print(f"{colored('Links', 'light_blue')} (type '?' for custom commands info):")
     
     curr_link = input()
     while (not (curr_link == "" or curr_link.isspace())):
@@ -269,7 +269,7 @@ def edit_entry(entry):
 
         if option == "Save":
             changed = (description or incognito or added_links or removed_links)
-            if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to save changes?", NO)) == YES:
+            if not changed or menu.separateInteraction(function=lambda: yes_or_no(colored("Are you sure you want to save changes?", "light_blue"), NO)) == YES:
                 all_links = entry[LINKS] + added_links
                 return description, incognito, [all_links[pos] for pos in range(len(all_links)) if (pos + 1) not in removed_links] 
             
@@ -277,7 +277,7 @@ def edit_entry(entry):
 
 
         if option == "Change":
-            description = menu.separateInteraction(function=lambda: input("New description: "), showCursor=True)
+            description = menu.separateInteraction(function=lambda: input(f'{colored("New description", "light_blue")}: '), showCursor=True)
             description = description if description != entry[DESC] else None # ignoring unchanged description
             continue
 
@@ -322,7 +322,7 @@ def edit_entry(entry):
         # backspace and esc are treated as choosing the 'Cancel changes' option
         if option in ["Cancel", key.ESC, key.BACKSPACE]: 
             changed = (description or incognito or added_links or removed_links)
-            if not changed or menu.separateInteraction(function=lambda: yes_or_no("Are you sure you want to cancel changes?", NO)) == YES:
+            if not changed or menu.separateInteraction(function=lambda: yes_or_no(colored("Are you sure you want to cancel changes?", "light_blue"), NO)) == YES:
                 return None, None, entry[LINKS]
 
 
@@ -364,7 +364,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
         # open links from selected list
         if command == key.ENTER:
             if not json_data[DESCRIPTIONS]:
-                console.separateInteraction(message="Link list is empty.\n")
+                console.separateInteraction(message=colored("Link list is empty.\n", "light_blue"))
                 continue
 
             entry  = json_data[DATA][curr_pos]
@@ -377,7 +377,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             for var in entry[LINKS]:
                 if var.startswith("var "):
                     vars[var[len("var "):var.find('=')].replace(' ', '')] = console.separateInteraction(function=lambda: 
-                                                                    input(f'{var[var.find(LINK_INPUT_START)+2:var.find(LINK_INPUT_END)]}: '), showCursor=True)
+                                                                    input(f'{var[var.find(LINK_INPUT_START)+len(LINK_INPUT_START):var.find(LINK_INPUT_END)]}: '), showCursor=True)
                  
             open_links = []
             for link in entry[LINKS]:
@@ -409,7 +409,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             for var in entry[LINKS]:
                 if var.startswith("var "):
                     vars[var[len("var "):var.find('=')].replace(' ', '')] = console.separateInteraction(function=lambda: 
-                                                                    input(f'{var[var.find(LINK_INPUT_START)+2:var.find(LINK_INPUT_END)]}: '), showCursor=True)
+                                                                    input(f'{var[var.find(LINK_INPUT_START)+len(LINK_INPUT_START):var.find(LINK_INPUT_END)]}: '), showCursor=True)
                 
             open_links = []
             for link in entry[LINKS]:
@@ -424,16 +424,16 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                     open_links.append(link)
 
             for link in open_links:
-                response = console.separateInteraction(message="Downloading response...", function=lambda: requests.get(link))
+                response = console.separateInteraction(message=colored("Downloading response...", "light_blue"), function=lambda: requests.get(link))
 
-                save_dir = console.separateInteraction(function=lambda: input(f"Saving response from '{link}'.\nFull path to save response at: "), showCursor=True)
+                save_dir = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} '{link}'.\n{colored('Full path to save response at', 'light_blue')}: "), showCursor=True)
                 while (save_dir and not save_dir.isspace()) and (not os.path.isabs(save_dir) or not os.path.isdir(save_dir)):
-                    save_dir = console.separateInteraction(function=lambda: input(f"Saving response from '{link}'.\nDirectory not found, try again (or leave empty to skip link): "), showCursor=True)
+                    save_dir = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} '{link}'.\n{colored('Directory not found, try again (leave empty to skip)', 'light_blue')}: "), showCursor=True)
 
                 if not save_dir or save_dir.isspace():
                     continue
 
-                save_file = console.separateInteraction(function=lambda: input(f"Saving response from '{link}'.\nName of file (without extension) - it WILL overwrite: "), showCursor=True)
+                save_file = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} '{link}'.\n{colored('Name of file (without extension) - it WILL overwrite', 'light_blue')}: "), showCursor=True)
                 saved = False
                 while not saved and (save_file and not save_file.isspace()):
                     try:
@@ -446,14 +446,14 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                             file.write(f'Website content:\n{response.text}')
                             saved = True
                     except Exception as e:
-                        save_file = console.separateInteraction(function=lambda: input(f"Saving response from '{link}'.\nFilename contains illegal character, try again (or leave empty to skip link): "), showCursor=True)
+                        save_file = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} '{link}'.\n{colored('Illegal character in filename, try again (leave empty to skip)', 'light_blue')}: "), showCursor=True)
             
             continue
 
 
         # creating new entry
         if command == key.CTRL_N:
-            description, incognito, links = console.separateInteraction(message="Add new entry:", function=create_entry, showCursor=True)
+            description, incognito, links = console.separateInteraction(message=colored("Add new entry:", "light_blue"), function=create_entry, showCursor=True)
             
             if not description:
                 continue
@@ -475,7 +475,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
         # showing details of selected entry
         if command == key.CTRL_D:
             if not json_data[DESCRIPTIONS]:
-                console.separateInteraction(message="Link list is empty.\n")
+                console.separateInteraction(message=colored("Link list is empty.\n", "light_blue"))
                 continue
 
             console.separateInteraction(message=f'{print_entry_details(json_data[DATA][curr_pos])}\n')
@@ -485,7 +485,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
         # replacing info in selected entry
         if command == key.CTRL_E:
             if not json_data[DESCRIPTIONS]:
-                console.separateInteraction(message="Link list is empty.\n")
+                console.separateInteraction(message=colored("Link list is empty.\n", "light_blue"))
                 continue
 
             description, incognito, links = console.separateInteraction(function=lambda: edit_entry(json_data[DATA][curr_pos]))
@@ -514,7 +514,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
         # moves selected entry to another link list:
         if command == key.CTRL_X:
             if not json_data[DESCRIPTIONS]:
-                console.separateInteraction(message="Link list is empty.\n")
+                console.separateInteraction(message=colored("Link list is empty.\n", "light_blue"))
                 continue
 
             entry = json_data[DATA][curr_pos]
@@ -555,7 +555,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
         # copies selected entry to link list
         if command == key.CTRL_C:
             if not json_data[DESCRIPTIONS]:
-                console.separateInteraction(message="Link list is empty.\n")
+                console.separateInteraction(message=colored("Link list is empty.\n", "light_blue"))
                 continue
 
             entry = json_data[DATA][curr_pos]
@@ -604,10 +604,10 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
         # remove entry from link list
         if command == key.DELETE:
             if not json_data[DESCRIPTIONS]:
-                console.separateInteraction(message="Link list is empty.\n")
+                console.separateInteraction(message=colored("Link list is empty.\n", "light_blue"))
                 continue
 
-            remove_answer = console.separateInteraction(function=lambda: yes_or_no(f'Are you sure you want to remove \'{json_data[DESCRIPTIONS][curr_pos]}\'?\nData will be lost forever.', default_answer=NO), showCursor=True)
+            remove_answer = console.separateInteraction(function=lambda: yes_or_no(f"{colored('Are you sure you want to remove', 'light_blue')} {json_data[DESCRIPTIONS][curr_pos]}{colored('?', 'light_blue')}\n{colored('Data will be lost forever.', 'light_blue')}", default_answer=NO), showCursor=True)
 
             if remove_answer == NO:
                 continue
@@ -636,7 +636,8 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 console.separateInteraction(function=gkeep_upload)
 
             except Exception as e:
-                console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
+                error_message = colored("Error encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.", "light_blue")
+                console.separateInteraction(message=f"{str(e)}\n{error_message}\n")
             
             console.upload = False # either the upload succeeded, so no need to upload again, or it failed, and it will fail again
             continue
@@ -654,7 +655,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
         # help menu
         if command == '?':
-            console.separateInteraction(function=lambda: MenuInterface.helpMenu(yaml.safe_load(open(f"{DATAPATH}/link_list_help_menu.yaml")), 'light_grey', 'light_grey'))
+            console.separateInteraction(function=lambda: MenuInterface.helpMenu(yaml.safe_load(open(f"{DATAPATH}/link_list_help_menu.yaml")), 'light_blue', 'cyan'))
 
         # quit application
         if command == key.ESC:
@@ -692,7 +693,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
 
         # creating new link list
         if command == key.CTRL_N:
-            filename = console.separateInteraction(function=lambda: input("Type name for new link list:\n"), showCursor=True)
+            filename = console.separateInteraction(message=colored("Type name for new link list:\n", "light_blue"), showCursor=True)
             
             try:
                 # ignoring command if filename is empty
@@ -700,12 +701,12 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                     continue
                 
                 if '/' in filename or '\\' in filename:
-                    console.separateInteraction(message="Illegal character used in name.\n")
+                    console.separateInteraction(message=colored("Illegal character used in name.\n", "light_blue"))
                     continue
 
                 # ignoring command if file already exists
                 if os.path.isfile(f'{JSONFOLDER}/{filename}.json'):
-                    console.separateInteraction(message="Link list with this name already exists.\n")
+                    console.separateInteraction(message=colored("Link list with this name already exists.\n", "light_blue"))
                     continue
 
                 with open(f'{JSONFOLDER}/{filename}.json', 'w', encoding='utf-8') as file:
@@ -722,14 +723,14 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 console.updatePos(files.index(filename))
 
             except:
-                console.separateInteraction(message="Illegal character used in name.\n")
+                console.separateInteraction(message=colored("Illegal character used in name.\n", "light_blue"))
 
             continue
 
         # rename link list
         if command == key.CTRL_R:
             file = files[curr_pos]
-            filename = console.separateInteraction(function=lambda: input(f'Rename {file} to:\n'), showCursor=True)
+            filename = console.separateInteraction(message=colored(f'Rename {file} to:\n', "light_blue"), showCursor=True)
 
             try:
                 # ignoring command if filename is empty
@@ -737,12 +738,12 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                     continue
 
                 if '/' in filename or '\\' in filename:
-                    console.separateInteraction(message="Illegal character used in name.\n")
+                    console.separateInteraction(message=colored("Illegal character used in name.\n", "light_blue"))
                     continue
 
                 # ignoring command if file already exists
                 if os.path.isfile(f'{JSONFOLDER}/{filename}.json'):
-                    console.separateInteraction(message="Link list with this name already exists.\n")
+                    console.separateInteraction(message=colored("Link list with this name already exists.\n", "light_blue"))
                     continue
                 
                 os.rename(f'{JSONFOLDER}/{file}.json', f'{JSONFOLDER}/{filename}.json')
@@ -809,7 +810,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
         # toggle hidden lists
         if command == key.CTRL_T:
             if console.hideFiles:
-                console.hideFiles = (console.separateInteraction(function=lambda: yes_or_no("Show hidden lists?", default_answer=NO), showCursor=True) == NO)
+                console.hideFiles = (console.separateInteraction(function=lambda: yes_or_no(colored("Show hidden lists?", "light_blue"), default_answer=NO), showCursor=True) == NO)
                 if not console.hideFiles:
                     curr_file = files[curr_pos]
                     files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
@@ -835,7 +836,8 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 console.separateInteraction(function=gkeep_upload)
 
             except Exception as e:
-                console.separateInteraction(message=f"{str(e)}\nError encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.\n")
+                error_message = colored("Error encountered during Google Keep upload.\nPlease rerun setup with 'python3 setup.py' to see what the problem is.", "light_blue")
+                console.separateInteraction(message=f"{str(e)}\n{error_message}\n")
             
             console.upload = False # either the upload succeeded, so no need to upload again, or it failed, and it will fail again
             continue
@@ -848,7 +850,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
 
         # help menu
         if command == '?':
-            console.separateInteraction(function=lambda: MenuInterface.helpMenu(yaml.safe_load(open(f"{DATAPATH}/link_master_help_menu.yaml")), 'light_grey', 'light_grey'))
+            console.separateInteraction(function=lambda: MenuInterface.helpMenu(yaml.safe_load(open(f"{DATAPATH}/link_master_help_menu.yaml"))))
 
         # quit application
         if command == key.ESC:
