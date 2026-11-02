@@ -424,7 +424,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                     open_links.append(link)
 
             for link in open_links:
-                response = console.separateInteraction(message=colored("Downloading response...", "light_blue"), function=lambda: requests.get(link))
+                response = console.separateInteraction(function=lambda: input(colored("Downloading response...", "light_blue")), function=lambda: requests.get(link))
 
                 save_dir = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} '{link}'.\n{colored('Full path to save response at', 'light_blue')}: "), showCursor=True)
                 while (save_dir and not save_dir.isspace()) and (not os.path.isabs(save_dir) or not os.path.isdir(save_dir)):
@@ -453,7 +453,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
         # creating new entry
         if command == key.CTRL_N:
-            description, incognito, links = console.separateInteraction(message=colored("Add new entry:", "light_blue"), function=create_entry, showCursor=True)
+            description, incognito, links = console.separateInteraction(function=lambda: input(colored("Add new entry:", "light_blue")), function=create_entry, showCursor=True)
             
             if not description:
                 continue
@@ -693,7 +693,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
 
         # creating new link list
         if command == key.CTRL_N:
-            filename = console.separateInteraction(message=colored("Type name for new link list:\n", "light_blue"), showCursor=True)
+            filename = console.separateInteraction(function=lambda: input(colored("Type name for new link list:\n", "light_blue")), showCursor=True)
             
             try:
                 # ignoring command if filename is empty
@@ -730,7 +730,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
         # rename link list
         if command == key.CTRL_R:
             file = files[curr_pos]
-            filename = console.separateInteraction(message=colored(f'Rename {file} to:\n', "light_blue"), showCursor=True)
+            filename = console.separateInteraction(function=lambda: input(colored(f'Rename {file} to:\n', "light_blue")), showCursor=True)
 
             try:
                 # ignoring command if filename is empty
