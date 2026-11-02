@@ -171,8 +171,8 @@ def print_entry_details(entry, removed_links=[]):
         else:
             index_length = len("xx. ")
 
-        if shutil.get_terminal_size()[0] < index_length + len(name):
-            name = name[:shutil.get_terminal_size()[0] - index_length - 1] + '-'
+        if shutil.get_terminal_size()[0] < index_length + len(name) - 1:
+            name = name[:shutil.get_terminal_size()[0] - index_length - 2] + '-'
 
         print_entry += name
 
@@ -247,8 +247,9 @@ def create_entry():
 def edit_entry(entry):
     menu_structure = yaml.safe_load(open(f"{DATAPATH}/link_list_edit.yaml"))
     menu_structure["Edit"]["Remove links"] = {f'{i}.': None for i in range(1, len(entry[LINKS]) + 1)}
-
-    menu = MenuInterface(menu_structure, submenuColor="light_blue", optionColor="light_blue", supressColorWarning=True, dontPrintMenu=True)
+    
+    # columnNo=10 is chosen arbitrarily based on the column width 
+    menu = MenuInterface(menu_structure, submenuColor="light_blue", optionColor="light_blue", supressColorWarning=True, dontPrintMenu=True, columnNo=10)
 
     description   = None
     incognito     = None
