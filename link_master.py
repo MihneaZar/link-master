@@ -296,7 +296,7 @@ def edit_entry(entry):
 
         if option == "Remove": 
             menu.setTopText(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links) \
-                            + f'\n\n{colored("Set links to be removed", "light_blue")}:\n')
+                            + f'\n\n{colored("Set links to be removed:", "light_blue")}\n')
             continue
         
         # setting link to be removed/unremoved
@@ -315,7 +315,7 @@ def edit_entry(entry):
             menu.changeOptionNames(path[:-1], changes)
 
             menu.setTopText(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links) \
-                            + f'\n\n{colored("Set links to be removed", "light_blue")}:\n')
+                            + f'\n\n{colored("Set links to be removed:", "light_blue")}\n')
             continue
 
 
@@ -426,14 +426,14 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             for link in open_links:
                 response = console.separateInteraction(message=colored("Downloading response...", "light_blue"), function=lambda: requests.get(link))
 
-                save_dir = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} {link}.\n{colored('Full path to save response at', 'light_blue')}: "), showCursor=True)
+                save_dir = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} {link}.\n{colored('Full path to save response at:', 'light_blue')} "), showCursor=True)
                 while (save_dir and not save_dir.isspace()) and (not os.path.isabs(save_dir) or not os.path.isdir(save_dir)):
-                    save_dir = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} {link}.\n{colored('Directory not found, try again (leave empty to skip)', 'light_blue')}: "), showCursor=True)
+                    save_dir = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} {link}.\n{colored('Directory not found, try again (leave empty to skip):', 'light_blue')} "), showCursor=True)
 
                 if not save_dir or save_dir.isspace():
                     continue
 
-                save_file = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} {link}.\n{colored('Name of file (without extension) - it WILL overwrite', 'light_blue')}: "), showCursor=True)
+                save_file = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} {link}.\n{colored('Name of file (without extension) - it WILL overwrite:', 'light_blue')} "), showCursor=True)
                 saved = False
                 while not saved and (save_file and not save_file.isspace()):
                     try:
@@ -446,14 +446,14 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                             file.write(f'Website content:\n{response.text}')
                             saved = True
                     except Exception as e:
-                        save_file = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} {link}.\n{colored('Illegal character in filename, try again (leave empty to skip)', 'light_blue')}: "), showCursor=True)
+                        save_file = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} {link}.\n{colored('Illegal character in filename, try again (leave empty to skip):', 'light_blue')} "), showCursor=True)
             
             continue
 
 
         # creating new entry
         if command == key.CTRL_N:
-            description, incognito, links = console.separateInteraction(message=f'{colored("Add new entry", "light_blue")}:', function=create_entry, showCursor=True)
+            description, incognito, links = console.separateInteraction(message=f'{colored("Add new entry:", "light_blue")}', function=create_entry, showCursor=True)
             
             if not description:
                 continue
@@ -679,7 +679,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
     files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
     files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
-    console.configure(specialCommands=FILE_COMMANDS_LIST, topTextColor="blue", itemColor="light_blue", helpColor="light_blue")
+    console.configure(specialCommands=FILE_COMMANDS_LIST, topTextColor="blue", itemColor="light_blue", helpColor="blue")
     console.updateList(files)
     console.updatePos(saved_pos)
     
@@ -693,7 +693,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
 
         # creating new link list
         if command == key.CTRL_N:
-            filename = console.separateInteraction(function=lambda: input(f'{colored("Type name for new link list", "light_blue")}:\n'), showCursor=True)
+            filename = console.separateInteraction(function=lambda: input(f'{colored("Type name for new link list:", "blue")}\n'), showCursor=True)
             
             try:
                 # ignoring command if filename is empty
@@ -701,12 +701,12 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                     continue
                 
                 if '/' in filename or '\\' in filename:
-                    console.separateInteraction(message=colored("Illegal character used in name.\n", "light_blue"))
+                    console.separateInteraction(message=colored("Illegal character used in name.\n", "blue"))
                     continue
 
                 # ignoring command if file already exists
                 if os.path.isfile(f'{JSONFOLDER}/{filename}.json'):
-                    console.separateInteraction(message=colored("Link list with this name already exists.\n", "light_blue"))
+                    console.separateInteraction(message=colored("Link list with this name already exists.\n", "blue"))
                     continue
 
                 with open(f'{JSONFOLDER}/{filename}.json', 'w', encoding='utf-8') as file:
@@ -723,14 +723,14 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 console.updatePos(files.index(filename))
 
             except:
-                console.separateInteraction(message=colored("Illegal character used in name.\n", "light_blue"))
+                console.separateInteraction(message=colored("Illegal character used in name.\n", "blue"))
 
             continue
 
         # rename link list
         if command == key.CTRL_R:
             file = files[curr_pos]
-            filename = console.separateInteraction(function=lambda: input(colored(f"Rename {file} to", "light_blue") + ":\n"), showCursor=True)
+            filename = console.separateInteraction(function=lambda: input(f'{colored("Rename", "blue")} {colored(file, "light_blue")} {colored("to:", "blue")}\n'), showCursor=True)
 
             try:
                 # ignoring command if filename is empty
@@ -738,12 +738,12 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                     continue
 
                 if '/' in filename or '\\' in filename:
-                    console.separateInteraction(message=colored("Illegal character used in name.\n", "light_blue"))
+                    console.separateInteraction(message=colored("Illegal character used in name.\n", "blue"))
                     continue
 
                 # ignoring command if file already exists
                 if os.path.isfile(f'{JSONFOLDER}/{filename}.json'):
-                    console.separateInteraction(message=colored("Link list with this name already exists.\n", "light_blue"))
+                    console.separateInteraction(message=colored("Link list with this name already exists.\n", "blue"))
                     continue
                 
                 os.rename(f'{JSONFOLDER}/{file}.json', f'{JSONFOLDER}/{filename}.json')
