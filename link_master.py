@@ -231,13 +231,13 @@ def get_links():
 # if the entry exists, it will accept empty description
 # otherwise it will cancel when it is empty
 def create_entry():
-    description = input("Description: ")
+    description = input(f'{colored("Description", "light_blue")}: ')
 
     # if the description is empty, cancels adding this entry
     if (not description or description.isspace()):
         return None, None, None
 
-    incognito = yes_or_no("Open in incognito mode", default_answer=NO, newline=False)
+    incognito = yes_or_no(colored("Open in incognito mode", "light_blue"), default_answer=NO, newline=False)
 
     links = get_links()
 
@@ -424,16 +424,16 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                     open_links.append(link)
 
             for link in open_links:
-                response = console.separateInteraction(function=lambda: input(colored("Downloading response...", "light_blue")), function=lambda: requests.get(link))
+                response = console.separateInteraction(message=colored("Downloading response...", "light_blue"), function=lambda: requests.get(link))
 
-                save_dir = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} '{link}'.\n{colored('Full path to save response at', 'light_blue')}: "), showCursor=True)
+                save_dir = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} {link}.\n{colored('Full path to save response at', 'light_blue')}: "), showCursor=True)
                 while (save_dir and not save_dir.isspace()) and (not os.path.isabs(save_dir) or not os.path.isdir(save_dir)):
-                    save_dir = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} '{link}'.\n{colored('Directory not found, try again (leave empty to skip)', 'light_blue')}: "), showCursor=True)
+                    save_dir = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} {link}.\n{colored('Directory not found, try again (leave empty to skip)', 'light_blue')}: "), showCursor=True)
 
                 if not save_dir or save_dir.isspace():
                     continue
 
-                save_file = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} '{link}'.\n{colored('Name of file (without extension) - it WILL overwrite', 'light_blue')}: "), showCursor=True)
+                save_file = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} {link}.\n{colored('Name of file (without extension) - it WILL overwrite', 'light_blue')}: "), showCursor=True)
                 saved = False
                 while not saved and (save_file and not save_file.isspace()):
                     try:
@@ -446,14 +446,14 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                             file.write(f'Website content:\n{response.text}')
                             saved = True
                     except Exception as e:
-                        save_file = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} '{link}'.\n{colored('Illegal character in filename, try again (leave empty to skip)', 'light_blue')}: "), showCursor=True)
+                        save_file = console.separateInteraction(function=lambda: input(f"{colored('Saving response from', 'light_blue')} {link}.\n{colored('Illegal character in filename, try again (leave empty to skip)', 'light_blue')}: "), showCursor=True)
             
             continue
 
 
         # creating new entry
         if command == key.CTRL_N:
-            description, incognito, links = console.separateInteraction(function=lambda: input(colored("Add new entry:", "light_blue")), function=create_entry, showCursor=True)
+            description, incognito, links = console.separateInteraction(message=f'{colored("Add new entry", "light_blue")}:', function=create_entry, showCursor=True)
             
             if not description:
                 continue
@@ -693,7 +693,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
 
         # creating new link list
         if command == key.CTRL_N:
-            filename = console.separateInteraction(function=lambda: input(colored("Type name for new link list:\n", "light_blue")), showCursor=True)
+            filename = console.separateInteraction(function=lambda: input(f'{colored("Type name for new link list", "light_blue")}:\n'), showCursor=True)
             
             try:
                 # ignoring command if filename is empty
@@ -730,7 +730,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
         # rename link list
         if command == key.CTRL_R:
             file = files[curr_pos]
-            filename = console.separateInteraction(function=lambda: input(colored(f'Rename {file} to:\n', "light_blue")), showCursor=True)
+            filename = console.separateInteraction(function=lambda: input(colored(f"Rename {file} to", "light_blue") + ":\n"), showCursor=True)
 
             try:
                 # ignoring command if filename is empty

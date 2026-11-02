@@ -15,7 +15,7 @@ except:
 sys.stderr = open(f'{DATAPATH}/errors.txt', "a")
 
 
-FULL_EXPLANATION = """This is the setup for the optional feature of being able to save your links to Google Keep.
+FULL_EXPLANATION = colored("""This is the setup for the optional feature of being able to save your links to Google Keep.
 For this, the program needs your account's Master Token - which provides full access to your Google account, through the APIs.
 Because of that, you need to be careful in handling it - just like you'd handle a password.
 
@@ -25,9 +25,9 @@ If you don't, you can use an Access Token - the explanation is provided when you
 Additionally, if you use multiple programs that access your Google Keep through the gkeepapi library, you can set up a special file to be the cache for it, and you can provide its path here through the fourth option.
 
 Important Note: this program saves your sensitive Master Token only on your computer, in the 'metadata/.paths' file.
-"""
+""", "light_blue")
 
-ACCESS_INSTRUCTIONS = """Follow the instructions at https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token.
+ACCESS_INSTRUCTIONS = f"""{colored("Follow the instructions at https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token.", "light_blue")}\n\
 Then paste the Access Token here (or leave empty to cancel):
 """
 
@@ -35,23 +35,26 @@ Then paste the Access Token here (or leave empty to cancel):
 def test_gkeep_upload():
     try:
         gkeep_upload()
-        print("Google Keep upload is working.\nPress enter to continue.")
+        print(colored("Google Keep upload is working.", "light_blue"))
+        print("Press enter to continue.")
         waitForEnter()
     except Exception as e:
-        print(f"\nError: '{type(e).__name__}'.")
+        print(f"\n{colored('Error', 'light_blue')}: {type(e).__name__}{colored('.', 'light_blue')}")
         if type(e).__name__ == 'ModuleNotFoundError':
-            print("The 'gkeepapi' library is missing.\nPlease install it with 'pip3 install gkeepapi' to be able to upload the link lists to Google Keep.")
+            error_message = "The 'gkeepapi' library is missing.\nPlease install it with 'pip3 install gkeepapi' to be able to upload the link lists to Google Keep."
         elif type(e).__name__ == 'LoginException':
-            print("Master Token authentification failed, check that it is correct or retry obtaining it with an Access Token.")
+            error_message = "Master Token authentification failed, check that it is correct or retry obtaining it with an Access Token."
         elif type(e).__name__ == 'FileNotFoundError' or type(e).__name__ == 'OSError' or type(e).__name__ == 'JSONDecodeError':
-            print("The cache file path is broken, or it is not JSON-formatted.\nThis path will be removed, but you can change it back to an existing JSON file through the fourth setup option.")
+            error_message = "The cache file path is broken, or it is not JSON-formatted.\nThis path will be removed, but you can change it back to an existing JSON file through the fourth setup option."
             KEEP_TOKEN = open(f'{DATAPATH}/.paths', 'r').readline()
             open(f'{DATAPATH}/.paths', 'w').write(KEEP_TOKEN)
         else:
-            print("Unknown error type.")
+            error_message = "Unknown error type."
+
+        print(colored(error_message, "light_blue"))
         print()
         input("Press enter to continue.")
-        waitForEnter
+        waitForEnter()
 
 # get absolute path of file/directory, whilst also checking for things are raising an error if check fails
 def get_path(path, must_exist=True, check_dir=False, check_file=False, replace_quotes=True):
@@ -107,7 +110,7 @@ def keep_menu():
             continue
 
         if option == "Change":
-            KEEP_TOKEN = menu.separateInteraction(function=lambda: input("Paste Master Token here or leave empty to cancel:\n"), showCursor=True)
+            KEEP_TOKEN = menu.separateInteraction(function=lambda: input(colored("Paste Master Token here or leave empty to cancel:\n", "light_blue")), showCursor=True)
             if KEEP_TOKEN and not KEEP_TOKEN.isspace():
                 if os.path.exists(f"{DATAPATH}/.paths"):
                     with open(f"{DATAPATH}/.paths", 'r') as file:
@@ -120,11 +123,11 @@ def keep_menu():
                 with open(f"{DATAPATH}/.paths", 'w') as file:
                     file.write(f"{KEEP_TOKEN}\n{KEEP_PATH}")
                 
-                menu.separateInteraction(message="Master Token saved.\n")
+                menu.separateInteraction(message=colored("Master Token saved.\n", "light_blue"))
 
         if option == "Use":
             if not gpsoauth_import:
-                menu.separateInteraction(message="In order to obtain a Master Token from the Access Token, the gpsoauth library is needed.\n")
+                menu.separateInteraction(message=colored("In order to obtain a Master Token from the Access Token, the gpsoauth library is needed.\n", "light_blue"))
                 continue
 
             while True:
@@ -150,15 +153,15 @@ def keep_menu():
                     with open(f"{DATAPATH}/.paths", 'w') as file:
                         file.write(f"{KEEP_TOKEN}\n{KEEP_PATH}")
                     
-                    menu.separateInteraction(message="Master Token saved.\n")
+                    menu.separateInteraction(message=colored("Master Token saved.\n", "light_blue"))
                     break
                     
                 except:
-                    menu.separateInteraction(message="Authentification failed, Master Token was not received.\n")
+                    menu.separateInteraction(message=colored("Authentification failed, Master Token was not received.\n", "light_blue"))
 
         if option == "Set":
             while True:
-                KEEP_PATH = menu.separateInteraction(function=lambda: input("Paste path to Keep Cache file, or leave empty to cancel:\n"), showCursor=True)
+                KEEP_PATH = menu.separateInteraction(function=lambda: input(f'{colored("Paste path to Keep Cache file, or leave empty to cancel", "light_blue")}:\n'), showCursor=True)
                 try:
                     KEEP_PATH = get_path(KEEP_PATH, check_file=True)
                     
@@ -172,7 +175,7 @@ def keep_menu():
                     with open(f"{DATAPATH}/.paths", 'w') as file:
                         file.write(f"{KEEP_TOKEN}\n{KEEP_PATH}")
 
-                    menu.separateInteraction(message="Cache filepath saved.\n")
+                    menu.separateInteraction(message=colored("Cache filepath saved.\n", "light_blue"))
 
                     break
 
@@ -188,7 +191,7 @@ def keep_menu():
                     else:
                         error_message = "Unknown error.\n"
 
-                    menu.separateInteraction(message=error_message)
+                    menu.separateInteraction(message=colored(error_message, "light_blue"))
 
 
         if option == "Test":
