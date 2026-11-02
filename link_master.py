@@ -867,21 +867,36 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
 
 
 def main():
-    if (len(sys.argv) == 2 and sys.argv[1] in ["-h", "--help"]):
-        print("\nConsole application for keeping track of important links.\n")
+    # command-line help
+    if len(sys.argv) == 2 and sys.argv[1] in ["-h", "--help"]:
+        print("\nConsole application for keeping track of important links.\nRun it as 'python3 link_master.py {link_list}' to open a link list directly from the command line.\n")
+        return
 
-    else:
-        saved_pos = 0
-        console = ConsoleListInterface(dontPrintList=True)
-        console.hideFiles = True  # hidden files
-        console.upload    = False # determines whether the app will automatically start gkeep_upload on quit (Esc) 
-        console.setTitle("Link Master")
-        while (True):
-            console.setTopText("Link Lists\n")
-            json_file_path = None
-            while not json_file_path:
-                json_file_path, saved_pos = json_file_loop(console, saved_pos)
-            link_list_loop(console, json_file_path, saved_pos)
+    saved_pos = 0
+    console = ConsoleListInterface(dontPrintList=True)
+    console.hideFiles = True  # hidden files
+    console.upload    = False # determines whether the app will automatically start gkeep_upload on quit (Esc) 
+    console.setTitle("Link Master")
+
+    # opening link list directly from the command line
+    if 2 <= len(sys.argv):
+        link_list = " ".join(sys.argv[1:])
+        if os.path.isfile(f'{JSONFOLDER}/{link_list}.json'):
+            # if it's a hidden link list, hideFiles must be set to False (otherwise it exists in the directory but not in the files list)
+            if link_list.startswith('.'):
+                console.hideFiles = False
+            # the list vector is needed to establish position of link list
+            files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
+            files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
+            saved_pos = files.index(link_list)
+            link_list_loop(console, f'{JSONFOLDER}/{link_list}.json', saved_pos)
+    
+    while (True):
+        console.setTopText("Link Lists\n")
+        json_file_path = None
+        while not json_file_path:
+            json_file_path, saved_pos = json_file_loop(console, saved_pos)
+        link_list_loop(console, json_file_path, saved_pos)
 
 
 if __name__ == '__main__':

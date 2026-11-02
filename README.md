@@ -13,7 +13,8 @@ A Link List page contains multiple entries. An entry has a description (e.g. 'Di
 
 ## Additional Information
 The program opens the links in Google Chrome / Google Incognito. <br>
-Typing '?' while in the app will print the help pages (for the Link Master Menu, or the Link List page). <br>
+Typing '?' while in the app will print the help pages (for the Link Lists Menu, or the Link List pages). <br>
+The program can be run with the name of one of the Link Lists as the argument (e.g. 'python3 link_master.py Dictionaries') to open that Link List directly from the command line. This also works for Link Lists with names which include spaces. <br>
 Only tested on Windows 11.
 
 ## Google Keep
