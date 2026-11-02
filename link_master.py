@@ -354,7 +354,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
     
     json_data = json.load(open(json_file_path))
 
-    console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan")
+    console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan", helpColor="light_blue")
     console.updateList(json_data[DESCRIPTIONS])
     console.updatePos(0)
 
@@ -522,7 +522,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             console.setTopText(f"Moving '{entry[DESC]}'\n")
             move_file_path, _ = json_file_loop(console, saved_pos)
             if not move_file_path or json_file_path == move_file_path:
-                console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan")
+                console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan", helpColor="light_blue")
                 console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
                 console.updateList(json_data[DESCRIPTIONS])
                 console.updatePos(curr_pos)
@@ -546,7 +546,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
             console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
 
-            console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan")
+            console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan", helpColor="light_blue")
             console.updateList(json_data[DESCRIPTIONS])
             console.updatePos(curr_pos)
 
@@ -564,7 +564,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
             copy_file_path, _ = json_file_loop(console, saved_pos)
             if not copy_file_path:
-                console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan")
+                console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan", helpColor="light_blue")
                 console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
                 console.updateList(json_data[DESCRIPTIONS])
                 console.updatePos(curr_pos)
@@ -595,7 +595,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
             console.setTopText(f"'{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}'\n")
 
-            console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan")
+            console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan", helpColor="light_blue")
             console.updateList(json_data[DESCRIPTIONS])
             console.updatePos(curr_pos)
 
@@ -679,7 +679,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
     files = sorted([file[:file.rfind('.')] for file in os.listdir(JSONFOLDER) if 'zip' not in file])
     files = list(filter(lambda file: file[0] != '.', files)) if console.hideFiles else files
 
-    console.configure(specialCommands=FILE_COMMANDS_LIST, topTextColor="blue", itemColor="light_blue")
+    console.configure(specialCommands=FILE_COMMANDS_LIST, topTextColor="blue", itemColor="light_blue", helpColor="light_blue")
     console.updateList(files)
     console.updatePos(saved_pos)
     
