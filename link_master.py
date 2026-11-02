@@ -248,8 +248,8 @@ def edit_entry(entry):
     menu_structure = yaml.safe_load(open(f"{DATAPATH}/link_list_edit.yaml"))
     menu_structure["Edit"]["Remove links"] = {f'{i}.': None for i in range(1, len(entry[LINKS]) + 1)}
     
-    # columnNo=10 is chosen arbitrarily based on the column width 
-    menu = MenuInterface(menu_structure, submenuColor="light_blue", optionColor="light_blue", supressColorWarning=True, dontPrintMenu=True, columnNo=10)
+    menu = MenuInterface(menu_structure, submenuColor="light_blue", optionColor="light_blue", supressColorWarning=True, 
+                         dontPrintMenu=True, columnNo=shutil.get_terminal_size()[0] // 10) # 10 is the minimum column width so that the column don't overwrite each other
 
     description   = None
     incognito     = None
@@ -456,7 +456,6 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             description, incognito, links = console.separateInteraction(message="Add new entry:", function=create_entry, showCursor=True)
             
             if not description:
-                console.separateInteraction(message="Description must not be empty.\n")
                 continue
 
             json_data[DATA].append({DESC: description, INCOGNITO: incognito, LINKS: links})
@@ -735,7 +734,6 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
             try:
                 # ignoring command if filename is empty
                 if not filename or filename.isspace():
-                    console.separateInteraction(message="Link list name must not be empty.\n")
                     continue
 
                 if '/' in filename or '\\' in filename:
