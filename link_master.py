@@ -77,7 +77,7 @@ def gkeep_upload():
         raise ModuleNotFoundError
 
     paths = [line.replace('\n', '') for line in open(f'{DATAPATH}/.paths').readlines()]
-    paths += [""] * (2 - len(paths)) # adding empty strings so that the following commands wont raise an error
+    paths += [""] * (2 - len(paths)) # adding empty strings so that the following commands wont raise an error random text here
 
     KEEP_TOKEN = paths[0]
     KEEP_PATH  = paths[1] if paths[1] else f'{DATAPATH}/.keep.json'
