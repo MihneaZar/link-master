@@ -277,8 +277,9 @@ def edit_entry(entry):
 
 
         if option == "Change":
-            description = menu.separateInteraction(function=lambda: autocomplete([entry[DESC], description], f'{colored("New description", "light_blue")}: '), showCursor=True)
-            description = description if description != entry[DESC] else None # ignoring unchanged description
+            new_description = menu.separateInteraction(function=lambda: autocomplete([entry[DESC], description], f'{colored("New description", "light_blue")}: '), showCursor=True)
+            if new_description and not new_description.isspace() and new_description != entry[DESC]: # ignoring unchanged description
+                description = new_description
             continue
 
         if option == "Toggle":
