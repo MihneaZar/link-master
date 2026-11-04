@@ -176,6 +176,9 @@ def print_entry_details(entry, removed_links=[]):
 
         print_entry += name
 
+    if not entry[LINKS]:
+        print_entry += "\n(None)"
+
     return print_entry
 
 
@@ -295,7 +298,7 @@ def edit_entry(entry):
             added_links += new_links
             continue
 
-        if option == "Remove": 
+        if option == "Remove" and (entry[LINKS] + added_links): 
             menu.setTopText(print_entry_details({DESC: description if description else entry[DESC], INCOGNITO: incognito if incognito else entry[INCOGNITO], LINKS: entry[LINKS] + added_links}, removed_links) \
                             + f'\n\n{colored("Set links to be removed:", "light_blue")}\n')
             continue
