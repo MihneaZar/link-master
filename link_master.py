@@ -9,6 +9,7 @@ import json
 import yaml
 import sys
 import os
+import re
 
 try:
     gkeepapi_imported = True
@@ -39,6 +40,11 @@ LINK_INPUT_START    = '{'
 LINK_INPUT_END      = '}'
 LINK_VALIDATE_START = '<'
 LINK_VALIDATE_END   = '>'
+
+# these look horrible, i know
+# also i didnt use the constants above as it would have looked that much worse 
+VAR_RE  = "^\\{[^{}<>]*(<[^{}<>]*>)?\\}$"
+LINK_RE = "^[^{}]*(\\{[^{}<>]*(<[^{}<>]*>)?\\}[^{}]*)*$"
 
 YES = "Yes"
 NO  = "No"
@@ -187,9 +193,15 @@ def print_entry_details(entry, removed_links=[]):
 def get_links():
     links = []
     print(f"{colored('Links', 'light_blue')} (type '?' for custom commands info):")
+
+    check_var  = re.compile(VAR_RE)
+    check_link = re.compile(LINK_RE)
     
-    curr_link = input()
-    while (not (curr_link == "" or curr_link.isspace())):
+    while True:
+
+        curr_link = input()
+        if curr_link == "" or curr_link.isspace():
+            break
 
         if curr_link == '?':
             print(f"For custom input, use the format '{LINK_INPUT_START}input_prompt{LINK_INPUT_END}' within the link (the text will be prompted on every link open).")
@@ -199,40 +211,22 @@ def get_links():
             print("    - 'x-y', which accepts any integer value between x an y;")
             print("    - case-sensitive text without spaces.")
                 
-            curr_link = input()
             continue
 
 
-        # checking that var has an input prompt
-        if curr_link.startswith("var ") and LINK_INPUT_START not in curr_link:
-            print("Input prompt missing, variable ignored.")
-            curr_link = input()
-            continue
-
-
-        # checking custom input
-        input_level = 0
-        for pos in range(len(curr_link)):
-            if curr_link[pos:pos+len(LINK_INPUT_START)] == LINK_INPUT_START:
-                input_level += 1
-
-            if curr_link[pos:pos+len(LINK_INPUT_END)] == LINK_INPUT_END:
-                input_level -= 1
-
-            # if there have been two {LINK_INPUT_START}'s in a row, 
-            # or a {LINK_INPUT_END} without a {LINK_INPUT_START} before it
-            # the custom input format is wrong
-            if input_level not in [0, 1]:
-                break
-
-        # {LINK_INPUT_START} left without a {LINK_INPUT_END} after  it
-        if input_level != 0:
-            print("Custom input format is wrong, entry ignored.")
+        if curr_link.startswith("var "): 
+            # checking that var has an input prompt and that it matches the variable regex
+            if LINK_INPUT_START not in curr_link or not check_var.fullmatch(curr_link[curr_link.find(LINK_INPUT_START):]):
+                print("Variable format is wrong, entry ignored.")
+                continue
 
         else:
-            links.append(curr_link)
+            # checking that link matches regex
+            if not check_link.fullmatch(curr_link):
+                print("Custom input format is wrong, entry ignored.")
+                continue
 
-        curr_link = input()
+        links.append(curr_link)
 
     return links
 
