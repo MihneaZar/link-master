@@ -369,7 +369,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
     
     console.setTopText(f"{json_file_path[json_file_path.rfind('/') + 1:json_file_path.rfind('.')]}\n")
     
-    json_data = json.load(open(json_file_path))
+    json_data = json.load(open(json_file_path, encoding="utf-8"))
 
     console.configure(specialCommands=LINK_COMMANDS_LIST, topTextColor="light_blue", itemColor="cyan", helpSearchColor="light_blue")
     console.updateList(json_data[DESCRIPTIONS])
