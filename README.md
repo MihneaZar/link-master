@@ -44,8 +44,7 @@ The order does not matter, since the variables are resolved first, then the link
 4. Examples four and five show how to utilise input validation. Add '\<option1|option2|...>' after the prompt to validate the input, where the options can either be case-sensitive text, or 'x-y', where x and y are non-negative integers, validation which accepts any integer value between x an y. 
 
 Additional Notes:
-- entering '?' when inputting links will provide instructions for the formatting of input-able links;
-- the slightly confusing '{input_prompt}' format is used so it does not interfere with valid characters in links (including, potentially, '{' and '}').
+- entering '?' when inputting links will provide instructions for the formatting of input-able links.
 
 -------------------------------------------------------------------------
 

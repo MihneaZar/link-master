@@ -347,7 +347,7 @@ def parse_link(link, vars):
                     validate_string = link[link.find(LINK_VALIDATE_START) + 1:link.find(LINK_VALIDATE_END)]
                     validation = []
                     for group in validate_string.split('|'):
-                        if '-' in group:
+                        if '-' in group and group[:group.find('-')].isdigit() and group[group.find('-') + 1:].isdigit():
                             validation += [str(no) for no in range(int(group[:group.find('-')]), int(group[group.find('-') + 1:]) + 1)]
                         else:
                             validation += [group]
@@ -405,7 +405,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                         validate_string = var[var.find(LINK_VALIDATE_START) + 1:var.find(LINK_VALIDATE_END)]
                         validation = []
                         for group in validate_string.split('|'):
-                            if '-' in group:
+                            if '-' in group and group[:group.find('-')].isdigit() and group[group.find('-') + 1:].isdigit():
                                 validation += [str(no) for no in range(int(group[:group.find('-')]), int(group[group.find('-') + 1:]) + 1)]
                             else:
                                 validation += [group]
@@ -449,7 +449,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                         validate_string = var[var.find(LINK_VALIDATE_START) + 1:var.find(LINK_VALIDATE_END)]
                         validation = []
                         for group in validate_string.split('|'):
-                            if '-' in group:
+                            if '-' in group and group[:group.find('-')].isdigit() and group[group.find('-') + 1:].isdigit():
                                 validation += [str(no) for no in range(int(group[:group.find('-')]), int(group[group.find('-') + 1:]) + 1)]
                             else:
                                 validation += [group]
