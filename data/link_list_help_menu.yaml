@@ -2,6 +2,8 @@ How do I move in the current link list?:
     - "    - arrow keys -> moving between entries in link list."
     - "    - character  -> move cursor to the next entry that starts with character, if it exists."
     - "    - ctrl+f     -> search for the next entry that contains string, if it exists (not case sensitive)."
+    - "                 -> while typing the search string, tab will autocomplete the highlighted match;"
+    - "                 -> also, up/down arrows will cycle through all entries that match the typed string."
     - "    - '\\'        -> find next entry that contains last searched string."
     - "    - backspace  -> exit current link list."
 Edit entries:
