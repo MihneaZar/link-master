@@ -35,8 +35,10 @@ KEEP_EMAIL = ""
 sys.stderr = open(f'{DATAPATH}/errors.txt', "a")
 
 # for custom input in the link, such as show season and episode
-LINK_INPUT_START = '{'
-LINK_INPUT_END   = '}'
+LINK_INPUT_START    = '{'
+LINK_INPUT_END      = '}'
+LINK_VALIDATE_START = '<'
+LINK_VALIDATE_END   = '>'
 
 YES = "Yes"
 NO  = "No"
@@ -193,6 +195,9 @@ def get_links():
             print(f"For custom input, use the format '{LINK_INPUT_START}input_prompt{LINK_INPUT_END}' within the link (the text will be prompted on every link open).")
             print(f"For custom input to be reused, add variable as 'var var_name={LINK_INPUT_START}input_prompt{LINK_INPUT_END}'. Spaces are not allowed in var_name.")
             print(f"The prompt will be provided only once for every variable, and '{LINK_INPUT_START}var_name{LINK_INPUT_END}' from links will be replaced by its value.")
+            print(f"Additionally, add {LINK_VALIDATE_START}option1|option2|...{LINK_VALIDATE_END} after prompt to validate input. Options can be:")
+            print("    - 'x-y', which accepts any integer value between x an y;")
+            print("    - case-sensitive text without spaces.")
                 
             curr_link = input()
             continue
@@ -337,9 +342,23 @@ def parse_link(link, vars):
             if link[pos:link.find(LINK_INPUT_END)] in vars:
                 value = vars[link[pos:link.find(LINK_INPUT_END)]]
             else:
-                value = input(f'{link[pos:link.find(LINK_INPUT_END)]}: ')
+                if LINK_VALIDATE_START in link:
+                    link_prompt = link[pos:link.find(LINK_VALIDATE_START)]
+                    validate_string = link[link.find(LINK_VALIDATE_START) + 1:link.find(LINK_VALIDATE_END)]
+                    validation = []
+                    for group in validate_string.split('|'):
+                        if '-' in group:
+                            validation += [str(no) for no in range(int(group[:group.find('-')]), int(group[group.find('-') + 1:]) + 1)]
+                        else:
+                            validation += [group]
+                    value = autocomplete(validation, f'{link_prompt}: ' if link_prompt else '')
+                    if value not in validation:
+                        return None
+                else:
+                    link_prompt = link[pos:link.find(LINK_INPUT_END)]
+                    value = input(f'{link_prompt}: ' if link_prompt else '')
 
-            if value.isspace():
+            if value is None or value.isspace():
                 return None
 
             link = link[:link.find(LINK_INPUT_START)] + value + link[link.find(LINK_INPUT_END)+len(LINK_INPUT_END):]
@@ -380,9 +399,21 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             vars = {}
             for var in entry[LINKS]:
                 if var.startswith("var "):
-                    vars[var[len("var "):var.find('=')].replace(' ', '')] = console.separateInteraction(function=lambda: 
-                                                                    input(f'{var[var.find(LINK_INPUT_START)+len(LINK_INPUT_START):var.find(LINK_INPUT_END)]}: '), showCursor=True)
-                 
+                    var_name   = var[len("var "):var.find('=')].replace(' ', '')
+                    if LINK_VALIDATE_START in var:
+                        var_prompt = var[var.find(LINK_INPUT_START)+len(LINK_INPUT_START):var.find(LINK_VALIDATE_START)]
+                        validate_string = var[var.find(LINK_VALIDATE_START) + 1:var.find(LINK_VALIDATE_END)]
+                        validation = []
+                        for group in validate_string.split('|'):
+                            if '-' in group:
+                                validation += [str(no) for no in range(int(group[:group.find('-')]), int(group[group.find('-') + 1:]) + 1)]
+                            else:
+                                validation += [group]
+                                vars[var_name] = console.separateInteraction(function=lambda: autocomplete(validation, f'{var_prompt}: ' if var_prompt else ''), showCursor=True)
+                    else:
+                        var_prompt = var[var.find(LINK_INPUT_START)+len(LINK_INPUT_START):var.find(LINK_INPUT_END)]
+                        vars[var_name] = console.separateInteraction(function=lambda: input(f'{var_prompt}: ' if var_prompt else ''), showCursor=True)
+            
             open_links = []
             for link in entry[LINKS]:
                 # ignoring vars 
@@ -400,7 +431,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             
             continue
 
-
+        # download webpage info to file
         if command == key.CTRL_O:
             if not json_data[DESCRIPTIONS]:
                 console.separateInteraction(message="Link list is empty.\n")
@@ -412,8 +443,20 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
             vars = {}
             for var in entry[LINKS]:
                 if var.startswith("var "):
-                    vars[var[len("var "):var.find('=')].replace(' ', '')] = console.separateInteraction(function=lambda: 
-                                                                    input(f'{var[var.find(LINK_INPUT_START)+len(LINK_INPUT_START):var.find(LINK_INPUT_END)]}: '), showCursor=True)
+                    var_name   = var[len("var "):var.find('=')].replace(' ', '')
+                    if LINK_VALIDATE_START in var:
+                        var_prompt = var[var.find(LINK_INPUT_START)+len(LINK_INPUT_START):var.find(LINK_VALIDATE_START)]
+                        validate_string = var[var.find(LINK_VALIDATE_START) + 1:var.find(LINK_VALIDATE_END)]
+                        validation = []
+                        for group in validate_string.split('|'):
+                            if '-' in group:
+                                validation += [str(no) for no in range(int(group[:group.find('-')]), int(group[group.find('-') + 1:]) + 1)]
+                            else:
+                                validation += [group]
+                                vars[var_name] = console.separateInteraction(function=lambda: autocomplete(validation, f'{var_prompt}: ' if var_prompt else ''), showCursor=True)
+                    else:
+                        var_prompt = var[var.find(LINK_INPUT_START)+len(LINK_INPUT_START):var.find(LINK_INPUT_END)]
+                        vars[var_name] = console.separateInteraction(function=lambda: input(f'{var_prompt}: ' if var_prompt else ''), showCursor=True)
                 
             open_links = []
             for link in entry[LINKS]:
@@ -423,7 +466,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
                 link = console.separateInteraction(function=lambda: parse_link(link, vars), showCursor=True)
 
-                # link is None if custom input was cancelled
+                # link is None if custom input was cancelled or it was invalidated
                 if link:
                     open_links.append(link)
 
