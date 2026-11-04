@@ -35,16 +35,17 @@ Otherwise, it will save it in the [metadata](metadata) folder as '.keep.json'.
 By default, the 'json_data' folder contains an 'Examples.json' file with a few the following examples for link formatting (ctrl+d shows the details of link entries): <br>
 1. The first one has links to three dictionaries: [Thesaurus](https://www.thesaurus.com/browse/), [Merriam-Webster](https://www.merriam-webster.com/thesaurus/) and [Wordhippo](https://www.wordhippo.com/what-is/another-word-for/). Pressing 'enter' on this entry simply opens all three links.
 2. The second example is for a link to [Thesaurus](https://www.thesaurus.com/browse/) with an input-able word to search for: <br>
-[https://www.thesaurus.com/browse/**\\{Word to search for\\**}]().<br>
-The '\\{Word to search for\\}' section will prompt the text 'Word to search for: ' on every link open, and will concatanate the response to the end of [https://www.thesaurus.com/browse/](). Therefore, the user can search for words on [Thesaurus](https://www.thesaurus.com/browse/) directly from the program. <br>
-The '\\{input_prompt\\}' section can be inserted into any part of the link, including the domain name.
-4. The third example is similar to the second, but it uses a variable: 'var search_str = \\{Word to search for\\}'. That way, all appearances of '\\{search_str\\}' in links will be changed to the response to the 'Word to search for: ' prompt. <br>
-The order does not matter, since the variables are first resolved, then the links are opened.
+[https://www.thesaurus.com/browse/**{Word to search for**}]().<br>
+The '{Word to search for}' section will prompt the text 'Word to search for: ' on every link open, and will concatanate the response to the end of [https://www.thesaurus.com/browse/](). Therefore, the user can search for words on [Thesaurus](https://www.thesaurus.com/browse/) directly from the program. <br>
+The '{input_prompt}' section can be inserted into any part of the link, including the domain name.
+3. The third example is similar to the second, but it uses a variable: 'var search_str = {Word to search for}'. That way, all appearances of '{search_str}' in links will be changed to the response to the 'Word to search for: ' prompt. <br>
+The order does not matter, since the variables are resolved first, then the links are opened.
 <br>
+4. Examples four and five show how to utilise input validation. Add '\<option1|option2|...>' after the prompt to validate the input, where the options can either be case-sensitive text, or 'x-y', where x and y are non-negative integers, validation which accepts any integer value between x an y. 
 
 Additional Notes:
 - entering '?' when inputting links will provide instructions for the formatting of input-able links;
-- the slightly confusing '\\{input_prompt\\}' format is used so it does not interfere with valid characters in links (including, potentially, '{' and '}').
+- the slightly confusing '{input_prompt}' format is used so it does not interfere with valid characters in links (including, potentially, '{' and '}').
 
 -------------------------------------------------------------------------
 

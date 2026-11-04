@@ -31,6 +31,20 @@
                 "https://www.wordhippo.com/what-is/another-word-for/{search_str}.html",
                 "var search_str = {Word to search for}"
             ]
+        },
+        {
+            "Description": "Wikipedia for Numbers",
+            "Incognito": "No",
+            "Links": [
+                "https://en.wikipedia.org/wiki/{Number<1-100>}"
+            ]
+        },
+        {
+            "Description": "Transform to PDF",
+            "Incognito": "No",
+            "Links": [
+                "https://www.ilovepdf.com/{word, powerpoint, excel, or jpg<word|powerpoint|excel|jpg>}_to_pdf"
+            ]
         }
     ]
 }
