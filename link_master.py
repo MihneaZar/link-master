@@ -33,8 +33,6 @@ LINKS        = "Links"
 KEEP_EMAIL = ""
 
 
-sys.stderr = open(f'{DATAPATH}/errors.txt', "a")
-
 # for custom input in the link, such as show season and episode
 LINK_INPUT_START    = '{'
 LINK_INPUT_END      = '}'
@@ -84,7 +82,7 @@ def gkeep_upload():
     if not gkeepapi_imported:
         raise ModuleNotFoundError
 
-    paths = [line.replace('\n', '') for line in open(f'{DATAPATH}/.paths').readlines()]
+    paths = [line.replace('\n', '') for line in open(f'{DATAPATH}/.paths', encoding='utf-8').readlines()]
     paths += [""] * (2 - len(paths)) # adding empty strings so that the following commands wont raise an error PUHLEASE
 
     KEEP_TOKEN = paths[0]
@@ -100,7 +98,7 @@ def gkeep_upload():
     print(colored("Downloading newest versions of notes...", "light_blue"))
     if os.path.isfile(KEEP_PATH):
         try: 
-            keep.authenticate(KEEP_EMAIL, KEEP_TOKEN, state=json.load(open(KEEP_PATH)))
+            keep.authenticate(KEEP_EMAIL, KEEP_TOKEN, state=json.load(open(KEEP_PATH, encoding='utf-8')))
         except gkeepapi.exception.ResyncRequiredException:
             keep.sync(resync=True)
             keep.authenticate(KEEP_EMAIL, KEEP_TOKEN)
@@ -157,7 +155,7 @@ def gkeep_upload():
     print(colored("Saving newest Google Keep state (for faster uploads in the future)...", "light_blue"))
 
     # Store Keep cache
-    with open(KEEP_PATH, 'w') as file:
+    with open(KEEP_PATH, 'w', encoding='utf-8') as file:
         json.dump(keep.dump(), file)
 
     print(colored("Upload complete.\n", "light_blue"))
@@ -478,7 +476,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 saved = False
                 while not saved and (save_file and not save_file.isspace()):
                     try:
-                        with open(f'{save_dir}/{save_file}.txt', "w", encoding='utf-8') as file:
+                        with open(f'{save_dir}/{save_file}.txt', 'w', encoding='utf-8') as file:
                             # save_dict = {"Link": link, "Headers": response.headers, "Content": f'"""{response.text}"""'}
                             # print(save_dict)
                             # json.dump(save_dict, file, ensure_ascii=False, indent=4)
@@ -570,7 +568,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 continue
 
             # adding entry to other json file
-            move_data = json.load(open(move_file_path))
+            move_data = json.load(open(move_file_path), encoding='utf-8')
 
             move_data[DATA].append(entry)
             move_data[DESCRIPTIONS].append(entry[DESC])
@@ -626,7 +624,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 continue
 
             # adding entry to other json file
-            copy_data = json.load(open(copy_file_path))
+            copy_data = json.load(open(copy_file_path), encoding='utf-8')
 
             copy_data[DATA].append(entry)
             copy_data[DESCRIPTIONS].append(entry[DESC])
@@ -691,7 +689,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
         # update list if it was changed outside current instance
         if command == key.CTRL_U:
-            json_data = json.load(open(json_file_path))
+            json_data = json.load(open(json_file_path), encoding='utf-8')
             console.updateList(json_data[DESCRIPTIONS])
 
         # help menu
@@ -790,7 +788,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 os.rename(f'{JSONFOLDER}/{file}.json', f'{JSONFOLDER}/{filename}.json')
 
                 # updating filename in json file
-                json_data = json.load(open(f'{JSONFOLDER}/{filename}.json'))
+                json_data = json.load(open(f'{JSONFOLDER}/{filename}.json'), encoding='utf-8')
                 json_data["Filename"] = filename
 
                 with open(f'{JSONFOLDER}/{filename}.json', 'w', encoding='utf-8') as file:

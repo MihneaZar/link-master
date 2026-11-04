@@ -46,8 +46,8 @@ def test_gkeep_upload():
             error_message = "Master Token authentification failed, check that it is correct or retry obtaining it with an Access Token."
         elif type(e).__name__ == 'FileNotFoundError' or type(e).__name__ == 'OSError' or type(e).__name__ == 'JSONDecodeError':
             error_message = "The cache file path is broken, or it is not JSON-formatted.\nThis path will be removed, but you can change it back to an existing JSON file through the fourth setup option."
-            KEEP_TOKEN = open(f'{DATAPATH}/.paths', 'r').readline()
-            open(f'{DATAPATH}/.paths', 'w').write(KEEP_TOKEN)
+            KEEP_TOKEN = open(f'{DATAPATH}/.paths', 'r', encoding='utf-8').readline()
+            open(f'{DATAPATH}/.paths', 'w', encoding='utf-8').write(KEEP_TOKEN)
         else:
             error_message = "Unknown error type."
 
@@ -87,7 +87,7 @@ def keep_menu():
     while True:
         info_message = ""
         if os.path.exists(f"{DATAPATH}/.paths"):
-            with open(f"{DATAPATH}/.paths", 'r') as file:
+            with open(f"{DATAPATH}/.paths", 'r', encoding='utf-8') as file:
                 lines = file.readlines()
                 KEEP_TOKEN = lines[0].replace('\n', '') if lines else ""
                 KEEP_PATH  = lines[1].replace('\n', '') if 2 <= len(lines) else ""
@@ -113,14 +113,14 @@ def keep_menu():
             KEEP_TOKEN = menu.separateInteraction(function=lambda: input(colored("Paste Master Token here or leave empty to cancel:\n", "light_blue")), showCursor=True)
             if KEEP_TOKEN and not KEEP_TOKEN.isspace():
                 if os.path.exists(f"{DATAPATH}/.paths"):
-                    with open(f"{DATAPATH}/.paths", 'r') as file:
+                    with open(f"{DATAPATH}/.paths", 'r', encoding='utf-8') as file:
                         lines = file.readlines()
                         KEEP_PATH = lines[1].replace('\n', '') if 2 <= len(lines) else ""
 
                 else:
                     KEEP_PATH = ""
                 
-                with open(f"{DATAPATH}/.paths", 'w') as file:
+                with open(f"{DATAPATH}/.paths", 'w', encoding='utf-8') as file:
                     file.write(f"{KEEP_TOKEN}\n{KEEP_PATH}")
                 
                 menu.separateInteraction(message=colored("Master Token saved.\n", "light_blue"))
@@ -143,14 +143,14 @@ def keep_menu():
                     KEEP_TOKEN = master_response['Token']
                     
                     if os.path.exists(f"{DATAPATH}/.paths"):
-                        with open(f"{DATAPATH}/.paths", 'r') as file:
+                        with open(f"{DATAPATH}/.paths", 'r', encoding='utf-8') as file:
                             lines = file.readlines()
                             KEEP_PATH = lines[1].replace('\n', '') if 2 <= len(lines) else ""
 
                     else:
                         KEEP_PATH = ""
                         
-                    with open(f"{DATAPATH}/.paths", 'w') as file:
+                    with open(f"{DATAPATH}/.paths", 'w', encoding='utf-8') as file:
                         file.write(f"{KEEP_TOKEN}\n{KEEP_PATH}")
                     
                     menu.separateInteraction(message=colored("Master Token saved.\n", "light_blue"))
@@ -166,13 +166,13 @@ def keep_menu():
                     KEEP_PATH = get_path(KEEP_PATH, check_file=True)
                     
                     if os.path.exists(f"{DATAPATH}/.paths"):
-                        with open(f"{DATAPATH}/.paths", 'r') as file:
+                        with open(f"{DATAPATH}/.paths", 'r', encoding='utf-8') as file:
                             KEEP_TOKEN = file.readline().replace('\n', '')
 
                     else:
                         KEEP_TOKEN = ""
                     
-                    with open(f"{DATAPATH}/.paths", 'w') as file:
+                    with open(f"{DATAPATH}/.paths", 'w', encoding='utf-8') as file:
                         file.write(f"{KEEP_TOKEN}\n{KEEP_PATH}")
 
                     menu.separateInteraction(message=colored("Cache filepath saved.\n", "light_blue"))
