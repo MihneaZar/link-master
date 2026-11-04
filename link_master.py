@@ -121,7 +121,7 @@ def gkeep_upload():
     note = keep.createNote("DO NOT ADD THIS LABEL", "All notes with this label are deleted on upload from Link Master app.")
     note.labels.add(label)
     for json_file in os.listdir(JSONFOLDER):
-        link_data = json.load(open(f'{JSONFOLDER}/{json_file}'))
+        link_data = json.load(open(f'{JSONFOLDER}/{json_file}', encoding='utf-8'))
 
         # checking if link list has data
         if link_data[DATA]:
