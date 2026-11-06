@@ -568,7 +568,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 continue
 
             # adding entry to other json file
-            move_data = json.load(open(move_file_path), encoding='utf-8')
+            move_data = json.load(open(move_file_path, encoding='utf-8'))
 
             move_data[DATA].append(entry)
             move_data[DESCRIPTIONS].append(entry[DESC])
@@ -624,7 +624,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                 continue
 
             # adding entry to other json file
-            copy_data = json.load(open(copy_file_path), encoding='utf-8')
+            copy_data = json.load(open(copy_file_path, encoding='utf-8'))
 
             copy_data[DATA].append(entry)
             copy_data[DESCRIPTIONS].append(entry[DESC])
@@ -689,7 +689,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
         # update list if it was changed outside current instance
         if command == key.CTRL_U:
-            json_data = json.load(open(json_file_path), encoding='utf-8')
+            json_data = json.load(open(json_file_path, encoding='utf-8'))
             console.updateList(json_data[DESCRIPTIONS])
 
         # help menu
@@ -788,7 +788,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
                 os.rename(f'{JSONFOLDER}/{file}.json', f'{JSONFOLDER}/{filename}.json')
 
                 # updating filename in json file
-                json_data = json.load(open(f'{JSONFOLDER}/{filename}.json'), encoding='utf-8')
+                json_data = json.load(open(f'{JSONFOLDER}/{filename}.json', encoding='utf-8'))
                 json_data["Filename"] = filename
 
                 with open(f'{JSONFOLDER}/{filename}.json', 'w', encoding='utf-8') as file:
