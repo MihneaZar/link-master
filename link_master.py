@@ -279,7 +279,7 @@ def edit_entry(entry):
 
 
         if option == "Change":
-            new_description = menu.separateInteraction(function=lambda: autocomplete([entry[DESC], description], f'{colored("New description", "light_blue")}: '), showCursor=True)
+            new_description = menu.separateInteraction(function=lambda: autocomplete([entry[DESC], description], f'{colored("New description", "light_blue")}: ', exitOnEsc=True), showCursor=True)
             if new_description and not new_description.isspace() and new_description != entry[DESC]: # ignoring unchanged description
                 description = new_description
             continue
@@ -772,7 +772,7 @@ def json_file_loop(console: ConsoleListInterface, saved_pos=0):
         # rename link list
         if command == key.CTRL_R:
             file = files[curr_pos]
-            filename = console.separateInteraction(function=lambda: autocomplete([file], f'{colored("Rename", "blue")} {colored(file, "light_blue")} {colored("to:", "blue")}\n'), showCursor=True)
+            filename = console.separateInteraction(function=lambda: autocomplete([file], f'{colored("Rename", "blue")} {colored(file, "light_blue")} {colored("to:", "blue")}\n', exitOnEsc=True), showCursor=True)
 
             try:
                 # ignoring command if filename is empty
