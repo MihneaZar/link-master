@@ -2,6 +2,7 @@ from ConsoleListInterface import ConsoleListInterface, MenuInterface, autocomple
 from send2trash import send2trash
 from readchar import readkey, key
 from termcolor import colored
+from time import sleep
 import subprocess
 import requests
 import shutil
@@ -249,7 +250,7 @@ def edit_entry(entry):
     menu_structure["Edit"]["Remove links"] = {f'{i}.': None for i in range(1, len(entry[LINKS]) + 1)}
     
     menu = MenuInterface(menu_structure, submenuColor="light_blue", optionColor="light_blue", supressColorWarning=True, 
-                         dontPrintMenu=True, columnNo=shutil.get_terminal_size()[0] // 10) # 10 is the minimum column width so that the column don't overwrite each other
+                         dontPrintMenu=True, columnNo=shutil.get_terminal_size()[0] // 23) # 23 is the minimum column width so that the column don't overwrite each other
 
     description   = None
     incognito     = None
@@ -262,6 +263,7 @@ def edit_entry(entry):
         
         # backspace from 'Remove links' option
         if not path:
+            menu.updatePos(4) # forcing position back where it's supposed to be, unclear why it backspaces to 'Cancel changes' 
             continue
 
         option = path[-1]
@@ -420,6 +422,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
 
             for link in open_links:
                 subprocess.Popen(f'start chrome {chrome_arg} /new-tab \"{link}\"', shell=True)
+                sleep(0.1) # wait a moment between links to avoid potential ip ban or sth from google
             
             continue
 
