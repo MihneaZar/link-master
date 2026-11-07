@@ -345,7 +345,7 @@ def parse_link(link, vars):
                             validation += [str(no) for no in range(int(group[:group.find('-')]), int(group[group.find('-') + 1:]) + 1)]
                         else:
                             validation += [group]
-                    value = autocomplete(validation, f'{link_prompt}: ' if link_prompt else '')
+                    value = autocomplete(validation, f'{link_prompt}: ' if link_prompt else '', exitOnEsc=True)
                     if value not in validation:
                         return None
                 else:
@@ -403,7 +403,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                                 validation += [str(no) for no in range(int(group[:group.find('-')]), int(group[group.find('-') + 1:]) + 1)]
                             else:
                                 validation += [group]
-                                vars[var_name] = console.separateInteraction(function=lambda: autocomplete(validation, f'{var_prompt}: ' if var_prompt else ''), showCursor=True)
+                                vars[var_name] = console.separateInteraction(function=lambda: autocomplete(validation, f'{var_prompt}: ' if var_prompt else '', exitOnEsc=True), showCursor=True)
                     else:
                         var_prompt = var[var.find(LINK_INPUT_START)+len(LINK_INPUT_START):var.find(LINK_INPUT_END)]
                         vars[var_name] = console.separateInteraction(function=lambda: input(f'{var_prompt}: ' if var_prompt else ''), showCursor=True)
@@ -448,7 +448,7 @@ def link_list_loop(console: ConsoleListInterface, json_file_path, saved_pos):
                                 validation += [str(no) for no in range(int(group[:group.find('-')]), int(group[group.find('-') + 1:]) + 1)]
                             else:
                                 validation += [group]
-                                vars[var_name] = console.separateInteraction(function=lambda: autocomplete(validation, f'{var_prompt}: ' if var_prompt else ''), showCursor=True)
+                                vars[var_name] = console.separateInteraction(function=lambda: autocomplete(validation, f'{var_prompt}: ' if var_prompt else '', exitOnEsc=True), showCursor=True)
                     else:
                         var_prompt = var[var.find(LINK_INPUT_START)+len(LINK_INPUT_START):var.find(LINK_INPUT_END)]
                         vars[var_name] = console.separateInteraction(function=lambda: input(f'{var_prompt}: ' if var_prompt else ''), showCursor=True)
