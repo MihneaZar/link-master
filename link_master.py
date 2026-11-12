@@ -915,7 +915,7 @@ def main():
         return
 
     saved_pos = 0
-    console = ConsoleListInterface(dontPrintList=True)
+    console = ConsoleListInterface(shownColumns=2, dontPrintList=True)
     console.hideFiles = True  # hidden files
     console.upload    = False # determines whether the app will automatically start gkeep_upload on quit (Esc) 
     console.setTitle("Link Master")
