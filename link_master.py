@@ -250,7 +250,7 @@ def edit_entry(entry):
     menu_structure["Edit"]["Remove links"] = {f'{i}.': None for i in range(1, len(entry[LINKS]) + 1)}
     
     menu = MenuInterface(menu_structure, submenuColor="light_blue", optionColor="light_blue", supressColorWarning=True, 
-                         dontPrintMenu=True, columnNo=shutil.get_terminal_size()[0] // 23) # 23 is the minimum column width so that the column don't overwrite each other
+                         dontPrintMenu=True, shownColumns=shutil.get_terminal_size()[0] // 23) # 23 is the minimum column width so that the column don't overwrite each other
 
     description   = None
     incognito     = None
